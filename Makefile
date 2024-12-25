@@ -37,3 +37,7 @@ clean:
 
 # Phony targets
 .PHONY: all clean
+
+# Compile and run
+run: all
+	$(TARGET)

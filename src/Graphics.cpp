@@ -1,4 +1,5 @@
 #include "Graphics.h"
+#include "Game.h"
 
 Graphics::Graphics(const std::string& windowName, unsigned width, unsigned height, Game* game) {
     // Create the window and check errors
@@ -27,5 +28,19 @@ Graphics::Graphics(const std::string& windowName, unsigned width, unsigned heigh
         {
             game->SetIsRunning(false);
         }      
-    }    
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+}
+
+void Graphics::Render()
+{
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+}
+
+Graphics::~Graphics()
+{
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
 }

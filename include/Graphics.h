@@ -1,7 +1,8 @@
 #pragma once
 #include "SDL2/SDL.h"
-#include "string.h"
-#include "Game.h"
+#include <string>
+
+class Game;
 
 class Graphics {
     SDL_Renderer* renderer;
