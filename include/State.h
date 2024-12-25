@@ -9,4 +9,6 @@ class State {
         State(Game* game);
         void Update();
         ~State();
+
+        
 };

@@ -1,10 +1,23 @@
 #pragma once
+#include <iostream>
+#include <cmath>
 
 class Vector2
 {
-    private:
+    public:
         float x;
         float y;
-    public:
+        Vector2();
         Vector2(float newX, float newY);
+        float GetMagnitude() const;
+        Vector2 Normalize() const;
+
+        // Operator overloads
+        Vector2 operator+(const Vector2& other) const;
+        Vector2 operator-(const Vector2& other) const;
+        Vector2 operator*(float scalar) const;
+        Vector2 operator/(float scalar) const;
+        Vector2& operator+=(const Vector2& other);
+        Vector2& operator-=(const Vector2& other);
+        friend std::ostream& operator<<(std::ostream& os, const Vector2& vec);
 };
