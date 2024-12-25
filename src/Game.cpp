@@ -13,8 +13,8 @@ Game::Game(const std::string& windowName, unsigned width, unsigned height)
     }
     
     graphics = new Graphics(windowName, width, height, this);
-    state = new State(this);
     input = new Input(this);
+    state = new State(this, input);
 }
 
 Game::~Game()

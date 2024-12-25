@@ -1,4 +1,4 @@
-#include "Vector2.h"
+#include "Math/Vector2.h"
 
 Vector2::Vector2() : x(0), y(0)
 {
@@ -59,12 +59,14 @@ Vector2& Vector2::operator+=(const Vector2& other)
 {
     x += other.x;
     y += other.y;
+    return *this;
 }
 
 Vector2& Vector2::operator-=(const Vector2& other)
 {
     x -= other.x;
     y -= other.y;
+    return *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector2& vec)
