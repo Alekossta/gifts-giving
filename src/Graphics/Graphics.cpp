@@ -1,8 +1,13 @@
 #include "Graphics/Graphics.h"
 #include <iostream>
 
-Graphics Graphics::instance;
+Graphics& Graphics::GetInstance() {
+    // Avoid global declaration of instance before first call of getInstance
+    static Graphics instance;
+    return instance;
+}
 
+// Initialization
 void Graphics::InitInternal(const std::string& windowName, unsigned width, unsigned height)
 {
     window = SDL_CreateWindow(windowName.c_str(),
@@ -22,6 +27,21 @@ void Graphics::InitInternal(const std::string& windowName, unsigned width, unsig
         SDL_DestroyWindow(window);
         throw std::runtime_error("Failed to create renderer");
     }
+    
+}
+
+// Cleanup
+Graphics::~Graphics()
+{
+    if (renderer) {
+        SDL_DestroyRenderer(renderer);
+        renderer = nullptr;
+    }
+    if (window) {
+        SDL_DestroyWindow(window);
+        window = nullptr;
+    }
+    SDL_Quit();
 }
 
 void Graphics::Init(const std::string& windowName, unsigned width, unsigned height)
@@ -29,20 +49,12 @@ void Graphics::Init(const std::string& windowName, unsigned width, unsigned heig
     GetInstance().InitInternal(windowName, width, height);
 }
 
-Graphics::~Graphics() {
-    if (renderer) SDL_DestroyRenderer(renderer);
-    if (window) SDL_DestroyWindow(window);
-}
-
-Graphics& Graphics::GetInstance() {
-    return instance;
-}
-
 SDL_Renderer* Graphics::GetRenderer() {
     return GetInstance().renderer;
 }
 
-void Graphics::RenderInternal() {
+void Graphics::RenderInternal()
+{ 
     SDL_RenderClear(renderer);
     // render all sprites
     for(auto& sprite : sprites)
