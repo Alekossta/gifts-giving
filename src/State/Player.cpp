@@ -3,9 +3,9 @@
 
 Player::Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize,
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
- unsigned newPlayerIndex, float newPlayerSpeed) :
+int zIndexNew, unsigned newPlayerIndex, float newPlayerSpeed) :
 Object(playerName, startingPosition, startingSize, true, newSrcName,newSourceRectanglePosition,
- newSourceRectangleSize), playerIndex(newPlayerIndex), playerSpeed(newPlayerSpeed)
+ newSourceRectangleSize, zIndexNew),  playerIndex(newPlayerIndex), playerSpeed(newPlayerSpeed)
 {
 
 }

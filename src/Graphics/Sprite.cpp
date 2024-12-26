@@ -2,8 +2,8 @@
 #include "SDL2/SDL_image.h"
 #include "Graphics/Graphics.h"
 
-Sprite::Sprite(const std::string& newName,Texture* newTexture, const SDL_Rect& newSourceRectangle) : name(newName),
-texture(newTexture), sourceRectangle(newSourceRectangle)
+Sprite::Sprite(const std::string& newName,Texture* newTexture, const SDL_Rect& newSourceRectangle, int zIndexNew)
+ : name(newName), texture(newTexture), sourceRectangle(newSourceRectangle), zIndex(zIndexNew)
 {
 
 }

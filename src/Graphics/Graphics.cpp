@@ -3,6 +3,8 @@
 #include "State/State.h"
 #include "Game.h"
 #include "Graphics/Texture.h"
+#include <vector>
+#include <algorithm>
 
 Graphics& Graphics::GetInstance() {
     // Avoid global declaration of instance before first call of getInstance
@@ -51,7 +53,7 @@ void Graphics::InitInternal(const std::string& windowName, unsigned width, unsig
 
         // create a sprite for each object
         SDL_Rect sourceRectangle = Game::Vectors2ToSdlRect(object->sourceRectanglePosition, object->sourceRectangleSize);
-        Sprite* newSprite = new Sprite(pair.second->name, spriteTexture, sourceRectangle);
+        Sprite* newSprite = new Sprite(object->name, spriteTexture, sourceRectangle, object->zIndex);
         sprites[object->name] = newSprite;
     }
 }
@@ -79,16 +81,25 @@ SDL_Renderer* Graphics::GetRenderer() {
     return GetInstance().renderer;
 }
 
+bool compareByZIndex(Sprite* a, Sprite* b) {
+    return a->GetIndexZ() < b->GetIndexZ(); // ascending order of z-index
+}
+
 void Graphics::RenderInternal()
 { 
     SDL_RenderClear(renderer);
+    std::vector<Sprite*> spriteVector;
+    for (const auto& pair : sprites) {
+        spriteVector.push_back(pair.second);
+    }
+    std::sort(spriteVector.begin(), spriteVector.end(), compareByZIndex);
     // render all sprites
-    for(auto& sprite : sprites)
+    for(Sprite* sprite : spriteVector)
     {
-        Vector2 spritePosition = State::GetAllObjects()[sprite.second->GetName()]->position;
-        Vector2 spriteSize = State::GetAllObjects()[sprite.second->GetName()]->size;
+        Vector2 spritePosition = State::GetAllObjects()[sprite->GetName()]->position;
+        Vector2 spriteSize = State::GetAllObjects()[sprite->GetName()]->size;
         SDL_FRect destinationRectangle = Game::Vectors2ToSdlFRect(spritePosition, spriteSize);
-        sprite.second->Render(destinationRectangle);
+        sprite->Render(destinationRectangle);
     }
     SDL_RenderPresent(renderer);
 }

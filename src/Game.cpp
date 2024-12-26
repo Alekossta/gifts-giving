@@ -5,8 +5,11 @@
 
 Game Game::instance;
 
-void Game::InitInternal(const std::string& windowName, unsigned width, unsigned height)
+void Game::InitInternal(const std::string& windowName, unsigned newWidth, unsigned newHeight)
 {
+    width = newWidth;
+    height = newHeight;
+
     SetIsRunning(true);
 
     int result = SDL_Init(SDL_INIT_EVERYTHING);
