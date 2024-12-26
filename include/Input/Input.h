@@ -4,9 +4,18 @@ class Game;
 
 class Input
 {
-    Game* game;
+    private:
+        static Input instance;
+
+        Input(){};
+        ~Input(){};
+
+        void InitInternal();
+        void ListenInternal();
+
+        Game* game;
     public:
-        Input(Game* game);
-        void Listen();
-        ~Input();
+        static Input& GetInstance() {return instance;};
+        static void Init();
+        static void Listen();
 };

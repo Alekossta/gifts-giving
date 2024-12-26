@@ -3,7 +3,13 @@
 #include "State/Player.h"
 #include "Math/Vector2.h"
 
-State::State(Game* newGame, Input* newInput) : game(newGame), input(newInput)
+State State::instance;
+
+State& State::GetInstance() {
+    return instance;
+}
+
+void State::InitInternal()
 {
     // create santa male
     Player* SantaMale = Player::CreatePlayer("Santa Male", Vector2(0,0), Vector2(32,32), input);
@@ -20,12 +26,22 @@ State::State(Game* newGame, Input* newInput) : game(newGame), input(newInput)
     }
 }
 
-void State::Update()
+void State::Init()
+{
+    GetInstance().InitInternal();
+}
+
+void State::UpdateInternal()
 {
     for(const auto& pair : allObjects)
     {
         pair.second->Update();
     }
+}
+
+void State::Update()
+{
+    GetInstance().UpdateInternal();
 }
 
 void State::AddObjectToAll(Object* objectToAdd)

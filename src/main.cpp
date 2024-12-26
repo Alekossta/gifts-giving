@@ -3,9 +3,9 @@
 
 int main()
 {
-    Game mainGame ("Gifts Giving", 1280, 800);
-    while (mainGame.GetIsRunning())
+    Game::Init("Gifts Giving", 1280, 800);
+    while (Game::GetIsRunning())
     {
-        mainGame.Run();
+        Game::Run();
     }
 }

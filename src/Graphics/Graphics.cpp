@@ -1,51 +1,54 @@
 #include "Graphics/Graphics.h"
-#include "Game.h"
+#include <iostream>
 
-Graphics::Graphics(const std::string& windowName, unsigned width, unsigned height, Game* game) {
-    // Create the window and check errors
-    window = SDL_CreateWindow(
-        windowName.c_str(),
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        width, height,
-        SDL_WINDOW_SHOWN
-    );
-    if(!window) // Error check
-    {
-        printf("Could not create window: %s\n", SDL_GetError());
-        if(game)
-        {
-            game->SetIsRunning(false);
-        }
+Graphics Graphics::instance;
+
+void Graphics::InitInternal(const std::string& windowName, unsigned width, unsigned height)
+{
+    window = SDL_CreateWindow(windowName.c_str(),
+                              SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_CENTERED,
+                              width,
+                              height,
+                              SDL_WINDOW_SHOWN);
+    if (!window) {
+        std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+        throw std::runtime_error("Failed to create window");
     }
 
-    // Create the renderer
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if(!renderer) // Error check
-    {
-        printf("Could not create renderer: %s\n", SDL_GetError());
-        if(game)
-        {
-            game->SetIsRunning(false);
-        }      
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!renderer) {
+        std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+        SDL_DestroyWindow(window);
+        throw std::runtime_error("Failed to create renderer");
     }
+}
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+void Graphics::Init(const std::string& windowName, unsigned width, unsigned height)
+{
+    GetInstance().InitInternal(windowName, width, height);
+}
 
-    if(game)
-    {
+Graphics::~Graphics() {
+    if (renderer) SDL_DestroyRenderer(renderer);
+    if (window) SDL_DestroyWindow(window);
+}
 
-    }
+Graphics& Graphics::GetInstance() {
+    return instance;
+}
+
+SDL_Renderer* Graphics::GetRenderer() {
+    return GetInstance().renderer;
+}
+
+void Graphics::RenderInternal() {
+    SDL_RenderClear(renderer);
+    // Add rendering logic here
+    SDL_RenderPresent(renderer);
 }
 
 void Graphics::Render()
 {
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-}
-
-Graphics::~Graphics()
-{
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    GetInstance().RenderInternal();
 }

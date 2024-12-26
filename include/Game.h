@@ -2,31 +2,32 @@
 #include <SDL2/SDL.h>
 #include <string>
 
-class Graphics;
-class State;
-class Input;
-
 class Game {
-    SDL_Renderer* renderer;
-    SDL_Window* window;
 
-    bool bIsRunning;
+    private:
+        static Game instance;
 
-    unsigned width;
-    unsigned height;
+        Game(){};
+        ~Game(){};
+
+        bool bIsRunning;
+
+        unsigned width;
+        unsigned height;
+
+        void InitInternal(const std::string& windowName, unsigned newWidth, unsigned newHeight);
+        void RunInternal();
 
     public:
         // functions
-        Game(const std::string& WindowName, unsigned newWidth, unsigned newHeight);
-        bool GetIsRunning() const {return bIsRunning;};
-        void SetIsRunning(bool bIsRunning) {this->bIsRunning = bIsRunning;};
-        unsigned GetWidth() const {return width;};
-        unsigned GetHeight() const {return height;};
-        void Run();
-        ~Game();
+        static Game& GetInstance() {return instance;};
+        static void Init(const std::string& windowName, unsigned newWidth, unsigned newHeight)
+        {GetInstance().InitInternal(windowName, newWidth, newHeight);};
 
-        // variables
-        State* state;
-        Graphics* graphics;
-        Input* input;
+        static bool GetIsRunning() {return GetInstance().bIsRunning;};
+        static void SetIsRunning(bool bIsRunning) {GetInstance().bIsRunning = bIsRunning;};
+
+        static unsigned GetWidth() {return GetInstance().width;};
+        static unsigned GetHeight() {return GetInstance().height;};
+        static void Run() {GetInstance().RunInternal();};
 };

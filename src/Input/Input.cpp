@@ -2,12 +2,14 @@
 #include <SDL2/SDL.h>
 #include "Game.h"
 
-Input::Input(Game* game)
+Input Input::instance;
+
+void Input::InitInternal()
 {
     
 }
 
-void Input::Listen()
+void Input::ListenInternal()
 {
     SDL_Event currentEvent;
     while(SDL_PollEvent(&currentEvent))
@@ -33,7 +35,12 @@ void Input::Listen()
     }
 }
 
-Input::~Input()
+void Input::Init()
 {
+    GetInstance().InitInternal();
+}
 
+void Input::Listen()
+{
+    GetInstance().ListenInternal();
 }

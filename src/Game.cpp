@@ -3,31 +3,25 @@
 #include "State/State.h"
 #include "Input/Input.h"
 
-Game::Game(const std::string& windowName, unsigned width, unsigned height)
+Game Game::instance;
+
+void Game::InitInternal(const std::string& windowName, unsigned width, unsigned height)
 {
-   // Initialize SDL subsystems
+    SetIsRunning(true);
+
     int result = SDL_Init(SDL_INIT_EVERYTHING);
     if(result < 0)
     {
         printf("Error in initialization of SDL subsystems: %s\n", SDL_GetError());
     }
-    input = new Input(this);
-    state = new State(this, input);
-    graphics = new Graphics(windowName, width, height, this);
+    Input::Init();
+    State::Init();
+    Graphics::Init(windowName, width, height);
 }
 
-void Game::Run()
+void Game::RunInternal()
 {
-    input->Listen();
-    state->Update();
-    graphics->Render();   
-}
-
-Game::~Game()
-{
-    delete input;
-    delete state;
-    delete graphics;
-
-    SDL_Quit();
+    Input::Listen();
+    State::Update();
+    Graphics::Render();
 }
