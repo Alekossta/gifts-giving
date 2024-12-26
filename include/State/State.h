@@ -29,4 +29,5 @@ class State {
         static State& GetInstance();
         static void Update();
         static void Init();
+        static std::map<std::string, Object*>& GetAllObjects() {return GetInstance().allObjects;};
 };

@@ -1,7 +1,8 @@
 #include "State/Player.h"
 
-Player::Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize, Input* newInput) :
-Object(playerName, startingPosition, startingSize, true), input(newInput)
+Player::Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize,
+const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize) :
+Object(playerName, startingPosition, startingSize, true, newSrcName,newSourceRectanglePosition, newSourceRectangleSize)
 {
 
 }
@@ -22,7 +23,9 @@ void Player::Update()
 }
 
 Player* Player::CreatePlayer(const std::string& newName,
-Vector2 startingPosition, Vector2 startingSize, Input* newInput)
+Vector2 startingPosition, Vector2 startingSize,
+const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize)
 {
-    return new Player(newName, startingPosition, startingSize, newInput);
+    return new Player(newName, startingPosition, startingSize, newSrcName, newSourceRectanglePosition,
+    newSourceRectangleSize);
 }

@@ -25,3 +25,25 @@ void Game::RunInternal()
     State::Update();
     Graphics::Render();
 }
+
+SDL_Rect Game::Vectors2ToSdlRect(const Vector2& positionVector, const Vector2& scaleVector)
+{
+    SDL_Rect newRect;
+    newRect.x = positionVector.x;
+    newRect.y = positionVector.y;
+    newRect.w = scaleVector.x;
+    newRect.h = scaleVector.y;
+
+    return newRect;
+}
+
+SDL_FRect Game::Vectors2ToSdlFRect(const Vector2& positionVector, const Vector2& scaleVector)
+{
+    SDL_FRect newRect;
+    newRect.x = positionVector.x;
+    newRect.y = positionVector.y;
+    newRect.w = scaleVector.x;
+    newRect.h = scaleVector.y;
+
+    return newRect;
+}

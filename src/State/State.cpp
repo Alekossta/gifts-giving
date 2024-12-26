@@ -12,11 +12,14 @@ State& State::GetInstance() {
 void State::InitInternal()
 {
     // create santa male
-    Player* SantaMale = Player::CreatePlayer("Santa Male", Vector2(0,0), Vector2(32,32), input);
+    Player* SantaMale = Player::CreatePlayer("Santa Male", Vector2(0,0), Vector2(64,64), "./assets/Atlas.png",
+    Vector2(0,0), Vector2(32,32));
     AddObjectToAll(SantaMale);
     AddObjectToColliding(SantaMale);
+
     // create santa female
-    Player* SantaFemale = Player::CreatePlayer("Santa Female", Vector2(64,0), Vector2(32,32), input);
+    Player* SantaFemale = Player::CreatePlayer("Santa Female", Vector2(64,0), Vector2(64,64), "./assets/Atlas.png",
+    Vector2(32,0), Vector2(32,32));
     AddObjectToAll(SantaFemale);
     AddObjectToColliding(SantaFemale);
 

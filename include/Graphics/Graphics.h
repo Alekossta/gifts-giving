@@ -11,9 +11,10 @@ class Graphics {
         static Graphics instance; // Singleton instance
         SDL_Renderer* renderer;
         SDL_Window* window;
-        Game* game;
-        // srcName, Sprite
+        // name, Sprite
         std::map<std::string, Sprite*> sprites;
+        // srcName, Texture
+        std::map<std::string, Texture*> textures;
 
         // Private constructor for singleton pattern
         Graphics(){};

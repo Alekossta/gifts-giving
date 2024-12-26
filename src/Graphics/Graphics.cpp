@@ -1,5 +1,8 @@
 #include "Graphics/Graphics.h"
 #include <iostream>
+#include "State/State.h"
+#include "Game.h"
+#include "Graphics/Texture.h"
 
 Graphics& Graphics::GetInstance() {
     // Avoid global declaration of instance before first call of getInstance
@@ -28,6 +31,27 @@ void Graphics::InitInternal(const std::string& windowName, unsigned width, unsig
         throw std::runtime_error("Failed to create renderer");
     }
     
+    for(const auto& pair : State::GetAllObjects())
+    {
+        Object* object = pair.second;
+        auto foundTexturePair = textures.find(object->srcName);
+        Texture* spriteTexture = NULL;
+        if (foundTexturePair == textures.end()) // this means the texture does not exist
+        {
+            std::cout << "Creating new texture for source: " << object->srcName << std::endl;
+            spriteTexture = new Texture(object->srcName);
+            textures[object->srcName] = spriteTexture; // add new texture to map
+        }
+        else
+        {
+            spriteTexture = textures[object->srcName];
+        }
+
+        // create a sprite for each object
+        SDL_Rect sourceRectangle = Game::Vectors2ToSdlRect(object->sourceRectanglePosition, object->sourceRectangleSize);
+        Sprite* newSprite = new Sprite(pair.second->name, spriteTexture, sourceRectangle);
+        sprites[object->name] = newSprite;
+    }
 }
 
 // Cleanup
@@ -59,7 +83,10 @@ void Graphics::RenderInternal()
     // render all sprites
     for(auto& sprite : sprites)
     {
-        sprite.second->Render();
+        Vector2 spritePosition = State::GetAllObjects()[sprite.second->GetName()]->position;
+        Vector2 spriteSize = State::GetAllObjects()[sprite.second->GetName()]->size;
+        SDL_FRect destinationRectangle = Game::Vectors2ToSdlFRect(spritePosition, spriteSize);
+        sprite.second->Render(destinationRectangle);
     }
     SDL_RenderPresent(renderer);
 }

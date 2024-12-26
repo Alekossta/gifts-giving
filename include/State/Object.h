@@ -5,7 +5,7 @@
 class Object
 {
     public:
-        Object(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,bool bCollidesNew=false,
+        Object(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,bool bCollidesNew,
         const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize);
         virtual ~Object();
         virtual void Begin();
@@ -20,7 +20,7 @@ class Object
         Vector2 sourceRectangleSize;
 
     static Object* CreateObject(const std::string& newName,
-     Vector2 startingPosition, Vector2 startingSize, bool bCollidesNew=false,
+     Vector2 startingPosition, Vector2 startingSize, bool bCollidesNew,
      const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize);
     static void DeleteObject(Object* object);
 };

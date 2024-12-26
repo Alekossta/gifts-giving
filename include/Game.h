@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <string>
+#include "Math/Vector2.h"
 
 class Game {
 
@@ -30,4 +31,8 @@ class Game {
         static unsigned GetWidth() {return GetInstance().width;};
         static unsigned GetHeight() {return GetInstance().height;};
         static void Run() {GetInstance().RunInternal();};
+
+        static SDL_Rect Vectors2ToSdlRect(const Vector2& positionVector, const Vector2& scaleVector);
+        static SDL_FRect Vectors2ToSdlFRect(const Vector2& positionVector, const Vector2& scaleVector);
+
 };
