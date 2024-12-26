@@ -1,4 +1,5 @@
 #include "State/Player.h"
+#include "SDL2/SDL.h"
 
 Player::Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize,
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize) :
@@ -19,7 +20,10 @@ void Player::Begin()
 
 void Player::Update()
 {
-
+    if(Input::IsKeyPressed(SDL_SCANCODE_D))
+    {
+        
+    }
 }
 
 Player* Player::CreatePlayer(const std::string& newName,

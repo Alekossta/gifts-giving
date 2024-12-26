@@ -18,4 +18,5 @@ class Input
         static Input& GetInstance() {return instance;};
         static void Init();
         static void Listen();
+        static bool IsKeyPressed(SDL_Scancode keyCode);
 };

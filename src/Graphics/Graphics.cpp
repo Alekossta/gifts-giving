@@ -30,6 +30,8 @@ void Graphics::InitInternal(const std::string& windowName, unsigned width, unsig
         SDL_DestroyWindow(window);
         throw std::runtime_error("Failed to create renderer");
     }
+
+    SDL_SetRenderDrawColor(renderer, 255,255,255,255);
     
     for(const auto& pair : State::GetAllObjects())
     {
