@@ -11,15 +11,18 @@ State& State::GetInstance() {
 
 void State::InitInternal()
 {
+
+    const float playersSpeed = 250.f;
+
     // create santa male
-    Player* SantaMale = Player::CreatePlayer("Santa Male", Vector2(0,0), Vector2(64,64), "./assets/Atlas.png",
-    Vector2(0,0), Vector2(32,32));
+    Player* SantaMale = new Player("Santa Male", Vector2(0,0), Vector2(64,64), "./assets/Atlas.png",
+    Vector2(0,0), Vector2(32,32), 0, playersSpeed);
     AddObjectToAll(SantaMale);
     AddObjectToColliding(SantaMale);
 
     // create santa female
-    Player* SantaFemale = Player::CreatePlayer("Santa Female", Vector2(64,0), Vector2(64,64), "./assets/Atlas.png",
-    Vector2(32,0), Vector2(32,32));
+    Player* SantaFemale = new Player("Santa Female", Vector2(64,0), Vector2(64,64), "./assets/Atlas.png",
+    Vector2(32,0), Vector2(32,32), 1, playersSpeed);
     AddObjectToAll(SantaFemale);
     AddObjectToColliding(SantaFemale);
 
@@ -34,17 +37,17 @@ void State::Init()
     GetInstance().InitInternal();
 }
 
-void State::UpdateInternal()
+void State::UpdateInternal(float deltatime)
 {
     for(const auto& pair : allObjects)
     {
-        pair.second->Update();
+        pair.second->Update(deltatime);
     }
 }
 
-void State::Update()
+void State::Update(float deltatime)
 {
-    GetInstance().UpdateInternal();
+    GetInstance().UpdateInternal(deltatime);
 }
 
 void State::AddObjectToAll(Object* objectToAdd)

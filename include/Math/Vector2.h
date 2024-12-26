@@ -10,7 +10,7 @@ class Vector2
         Vector2();
         Vector2(float newX, float newY);
         float GetMagnitude() const;
-        Vector2 Normalize() const;
+        void Normalize();
 
         // Operator overloads
         Vector2 operator+(const Vector2& other) const;

@@ -16,7 +16,7 @@ class State {
         Input* input;
 
         void InitInternal();
-        void UpdateInternal();
+        void UpdateInternal(float deltatime);
         State(){};
         ~State();
 
@@ -27,7 +27,7 @@ class State {
         void AddObjectToColliding(Object* objectToAdd);
     public:
         static State& GetInstance();
-        static void Update();
+        static void Update(float deltatime);
         static void Init();
         static std::map<std::string, Object*>& GetAllObjects() {return GetInstance().allObjects;};
 };

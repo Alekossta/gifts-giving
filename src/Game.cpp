@@ -21,8 +21,11 @@ void Game::InitInternal(const std::string& windowName, unsigned width, unsigned 
 
 void Game::RunInternal()
 {
+    Uint32 frameStart = SDL_GetTicks();
+    deltatime = (frameStart - lastFrameStart) / 1000.0f;
+    lastFrameStart = frameStart;
     Input::Listen();
-    State::Update();
+    State::Update(deltatime);
     Graphics::Render();
 }
 

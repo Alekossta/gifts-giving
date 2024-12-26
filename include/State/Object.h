@@ -9,7 +9,7 @@ class Object
         const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize);
         virtual ~Object();
         virtual void Begin();
-        virtual void Update();
+        virtual void Update(float deltatime);
         std::string name;
         Vector2 position;
         Vector2 size;

@@ -32,16 +32,12 @@ Vector2 Vector2::operator*(float scalar) const
     return Vector2(x * scalar, y * scalar);
 }
 
-Vector2 Vector2::Normalize() const
+void Vector2::Normalize()
 {
     float magnitude = GetMagnitude();
     if(magnitude > 0)
     {
-        return *this / magnitude;
-    }
-    else // in case magnitude is 0 just return the same vector
-    {
-        return *this;
+        *this = *this / magnitude;
     }
 }
 

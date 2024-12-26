@@ -45,7 +45,7 @@ void Input::Listen()
     GetInstance().ListenInternal();
 }
 
-static bool IsKeyPressed(SDL_Scancode keyCode)
+bool Input::IsKeyPressed(SDL_Scancode keyCode)
 {
     const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
     return keyboardState[keyCode];

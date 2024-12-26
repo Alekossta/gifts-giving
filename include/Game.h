@@ -16,6 +16,9 @@ class Game {
         unsigned width;
         unsigned height;
 
+        Uint32 lastFrameStart;
+        float deltatime;
+
         void InitInternal(const std::string& windowName, unsigned newWidth, unsigned newHeight);
         void RunInternal();
 

@@ -18,7 +18,7 @@ void Object::Begin()
 
 }
 
-void Object::Update()
+void Object::Update(float deltatime)
 {
 
 }
