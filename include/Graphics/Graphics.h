@@ -1,6 +1,8 @@
 #pragma once
 #include "SDL2/SDL.h"
 #include <string>
+#include <map>
+#include "Sprite.h"
 
 class Game;
 
@@ -10,6 +12,8 @@ class Graphics {
         SDL_Renderer* renderer;
         SDL_Window* window;
         Game* game;
+        // srcName, Sprite
+        std::map<std::string, Sprite*> sprites;
 
         // Private constructor for singleton pattern
         Graphics(){};
@@ -17,6 +21,8 @@ class Graphics {
         // internal
         void RenderInternal();
         void InitInternal(const std::string& windowName, unsigned width, unsigned height);
+
+        void InitSpritesInternal();
 
         // Delete copy constructor and assignment operator to prevent duplicates
         Graphics(const Graphics&) = delete;

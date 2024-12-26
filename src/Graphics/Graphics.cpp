@@ -44,7 +44,11 @@ SDL_Renderer* Graphics::GetRenderer() {
 
 void Graphics::RenderInternal() {
     SDL_RenderClear(renderer);
-    // Add rendering logic here
+    // render all sprites
+    for(auto& sprite : sprites)
+    {
+        sprite.second->Render();
+    }
     SDL_RenderPresent(renderer);
 }
 
