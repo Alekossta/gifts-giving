@@ -1,4 +1,4 @@
-#include "Graphics.h"
+#include "Graphics/Graphics.h"
 #include "Game.h"
 
 Graphics::Graphics(const std::string& windowName, unsigned width, unsigned height, Game* game) {
@@ -31,6 +31,11 @@ Graphics::Graphics(const std::string& windowName, unsigned width, unsigned heigh
     }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    if(game)
+    {
+
+    }
 }
 
 void Graphics::Render()

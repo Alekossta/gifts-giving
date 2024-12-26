@@ -13,6 +13,7 @@ class Object
         Vector2 position;
         Vector2 size;
         bool bCollides;
+        std::string srcName;
 
     static Object* CreateObject(const std::string& newName,
      Vector2 startingPosition, Vector2 startingSize, bool bCollidesNew=false);

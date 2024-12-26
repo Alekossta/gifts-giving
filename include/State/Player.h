@@ -1,6 +1,6 @@
 #pragma once
 #include "Object.h"
-#include "Input.h"
+#include "Input/Input.h"
 
 class Player : public Object
 {  

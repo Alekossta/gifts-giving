@@ -1,4 +1,4 @@
-#include "Object.h"
+#include "State/Object.h"
 
 Object::Object(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,bool bCollidesNew)
  : name(newName), position(startingPosition), size(startingSize), bCollides(bCollidesNew)

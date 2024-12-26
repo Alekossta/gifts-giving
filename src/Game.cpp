@@ -1,7 +1,7 @@
 #include "Game.h"
-#include "Graphics.h"
-#include "State.h"
-#include "Input.h"
+#include "Graphics/Graphics.h"
+#include "State/State.h"
+#include "Input/Input.h"
 
 Game::Game(const std::string& windowName, unsigned width, unsigned height)
 {
@@ -11,10 +11,16 @@ Game::Game(const std::string& windowName, unsigned width, unsigned height)
     {
         printf("Error in initialization of SDL subsystems: %s\n", SDL_GetError());
     }
-    
-    graphics = new Graphics(windowName, width, height, this);
     input = new Input(this);
     state = new State(this, input);
+    graphics = new Graphics(windowName, width, height, this);
+}
+
+void Game::Run()
+{
+    input->Listen();
+    state->Update();
+    graphics->Render();   
 }
 
 Game::~Game()

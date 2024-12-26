@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "State/Player.h"
 
 Player::Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize, Input* newInput) :
 Object(playerName, startingPosition, startingSize, true), input(newInput)

@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 #include "Object.h"
-#include "Input.h"
+#include "Input/Input.h"
 
 class Game;
 
