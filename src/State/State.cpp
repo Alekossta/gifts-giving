@@ -3,6 +3,7 @@
 #include "Math/Vector2.h"
 #include "State/Object.h"
 #include "State/Player.h"
+#include "LevelManager/LevelManager.h"
 
 State State::instance;
 
@@ -12,12 +13,28 @@ void State::InitInternal() {
 
   const float playersSpeed = 250.f;
 
-  // create santa male
-  Player *SantaMale = new Player("Santa Male", Vector2(0, 0), Vector2(64, 64),
+  LevelManager::Init();
+
+  currentLevel = LevelManager::GetLevels()["Level0"];
+
+
+  for (int i = 0; i < NUM_OF_TILES_ROW; i++) 
+  {
+    for (int j = 0; j < NUM_OF_TILES_COL; j++)
+    {
+      if (currentLevel[i][j] == "MA") {
+          Player *SantaMale = new Player("Santa Male", Vector2(TILE_SIZE * i, TILE_SIZE * j), Vector2(TILE_SIZE, TILE_SIZE),
                                  "./assets/Atlas.png", Vector2(0, 0),
                                  Vector2(32, 32), 0, 0, playersSpeed);
-  AddObjectToAll(SantaMale);
-  AddObjectToColliding(SantaMale);
+          AddObjectToAll(SantaMale);
+          AddObjectToColliding(SantaMale);
+      }
+    }
+  }
+
+
+  // create santa male
+ 
 
   // create santa female
   Player *SantaFemale = new Player(

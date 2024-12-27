@@ -17,7 +17,7 @@ void Input::ListenInternal()
         switch (currentEvent.type)
         {
             case SDL_QUIT:
-                game->SetIsRunning(false);
+                Game::SetIsRunning(false);
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 break;

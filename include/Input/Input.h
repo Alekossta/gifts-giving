@@ -13,8 +13,7 @@ class Input
 
         void InitInternal();
         void ListenInternal();
-
-        Game* game;
+        
     public:
         static Input& GetInstance() {return instance;};
         static void Init();

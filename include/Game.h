@@ -3,6 +3,10 @@
 #include <string>
 #include "Math/Vector2.h"
 
+#define TILE_SIZE 80
+#define NUM_OF_TILES_ROW (1280 / 80)
+#define NUM_OF_TILES_COL (800 / 80)
+
 class Game {
 
     private:

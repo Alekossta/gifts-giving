@@ -4,6 +4,7 @@
 #include <map>
 #include "Object.h"
 #include "Input/Input.h"
+#include "Level/Level.h"
 
 class Game;
 
@@ -12,8 +13,7 @@ class State {
         static State instance;
 
         bool bPaused;
-        Game* game;
-        Input* input;
+        Level* currentLevel;
 
         void InitInternal();
         void UpdateInternal(float deltatime);
