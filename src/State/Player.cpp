@@ -1,5 +1,6 @@
 #include "State/Player.h"
 #include "SDL2/SDL.h"
+#include "State/State.h"
 
 Player::Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize,
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
@@ -50,5 +51,7 @@ void Player::Update(float deltatime)
 
     
     movementDirection.Normalize();
-    position += movementDirection * deltatime * playerSpeed;
+    
+    Vector2 newPosition = position + movementDirection * deltatime * playerSpeed;
+    State::MoveObject(this, newPosition);
 }
