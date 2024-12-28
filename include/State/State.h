@@ -31,4 +31,6 @@ class State {
         static void Init();
         static void MoveObject(Object* object, Vector2 newPosition);
         static std::map<std::string, Object*>& GetAllObjects() {return GetInstance().allObjects;};
+        std::map<std::string, int> tileCodeToTextureIndex;
+        std::vector<std::string> wallCodes;
 };

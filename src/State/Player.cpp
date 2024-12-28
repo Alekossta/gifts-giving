@@ -4,9 +4,9 @@
 
 Player::Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize,
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-int zIndexNew, unsigned newPlayerIndex, float newPlayerSpeed) :
-Object(playerName, startingPosition, startingSize, true, newSrcName,newSourceRectanglePosition,
- newSourceRectangleSize, zIndexNew),  playerIndex(newPlayerIndex), playerSpeed(newPlayerSpeed)
+int zIndexNew,bool bIsVisibleNew, unsigned newPlayerIndex, float newPlayerSpeed) :
+Object(playerName, startingPosition, startingSize, false, newSrcName,newSourceRectanglePosition,
+ newSourceRectangleSize, zIndexNew, bIsVisibleNew),  playerIndex(newPlayerIndex), playerSpeed(newPlayerSpeed)
 {
 
 }

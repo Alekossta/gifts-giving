@@ -10,7 +10,7 @@ class Player : public Object
     public:
         Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize,
         const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-        int zIndexNew, unsigned newPlayerIndex, float newPlayerSpeed);
+        int zIndexNew, bool bIsVisibleNew, unsigned newPlayerIndex, float newPlayerSpeed);
         ~Player();
         virtual void Begin() override;
         virtual void Update(float deltatime) override;

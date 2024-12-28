@@ -5,13 +5,13 @@
 class Button : public Object
 {  
     private:
-        unsigned playerIndex;
-        float playerSpeed;
+        bool bIsPressed;
+        int opensDoorCode;
     public:
-        Button(const std::string& buttonName, Vector2 position, Vector2 startingSize,
+        Button(const std::string& buttonName, Vector2 position, Vector2 startingSize, bool bCollidesNew,
         const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-        int zIndexNew);
-        ~Button();
+        int zIndexNew, bool bIsPressed, bool bIsVisibleNew, int opensDoorCode);
+        ~Button(){};
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
 };
