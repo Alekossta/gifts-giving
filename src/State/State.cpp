@@ -30,10 +30,9 @@ void State::InitInternal() {
         AddObjectToAll(GroundTileMap);
         Player *SantaMale =
             new Player("Santa Male", Vector2(TILE_SIZE * x, TILE_SIZE * y),
-                       Vector2(TILE_SIZE, TILE_SIZE), "./assets/Atlas.png",
+                       Vector2(64, 64), "./assets/Atlas.png",
                        Vector2(0, 0), Vector2(32, 32), 0, 0, playersSpeed);
         AddObjectToAll(SantaMale);
-        AddObjectToColliding(SantaMale);
       } else if (currentLevel->grid[y][x] == "FE") {
         float xOffset = x * TILE_SIZE;
         float yOffset = y * TILE_SIZE;
@@ -48,7 +47,6 @@ void State::InitInternal() {
                        Vector2(64, 64), "./assets/Atlas.png", Vector2(32, 0),
                        Vector2(32, 32), 0, 1, playersSpeed);
         AddObjectToAll(SantaFemale);
-        AddObjectToColliding(SantaFemale);
       } else if (currentLevel->grid[y][x] == "BT") {
         float xOffset = x * TILE_SIZE;
         float yOffset = y * TILE_SIZE;
