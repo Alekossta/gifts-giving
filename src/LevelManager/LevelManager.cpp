@@ -7,7 +7,7 @@ LevelManager LevelManager::instance;
 
 void LevelManager::InitInternal() 
 {
-    std::string path = "/assets/levels";
+    std::string path = "assets/levels";
     int counter = 0;
     for (const auto & entry : std::filesystem::directory_iterator(path)) 
     {

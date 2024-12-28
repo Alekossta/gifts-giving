@@ -12,13 +12,15 @@ class LevelManager {
 
         void InitInternal();
         void UpdateInternal(float deltatime);
+        std::map<std::string, Level*> GetLevelsInternal();
         LevelManager(){};
-        ~LevelManager();
+        
 
         std::map<std::string, Level*> levels;
 
     public:
-        static LevelManager& GetInstance();
+        static LevelManager& GetInstance() {return instance;}
         static void Init();
-        static std::map<std::string, Level*>& GetLevels();
+        static std::map<std::string, Level*>& GetLevels() {return GetInstance().levels; };
+        ~LevelManager() {};
 };

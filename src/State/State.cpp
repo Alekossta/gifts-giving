@@ -1,9 +1,9 @@
 #include "State/State.h"
 #include "Game.h"
+#include "LevelManager/LevelManager.h"
 #include "Math/Vector2.h"
 #include "State/Object.h"
 #include "State/Player.h"
-#include "LevelManager/LevelManager.h"
 
 State State::instance;
 
@@ -17,55 +17,60 @@ void State::InitInternal() {
 
   currentLevel = LevelManager::GetLevels()["Level0"];
 
-
-  for (int i = 0; i < NUM_OF_TILES_ROW; i++) 
-  {
-    for (int j = 0; j < NUM_OF_TILES_COL; j++)
-    {
-      if (currentLevel[i][j] == "MA") {
-          Player *SantaMale = new Player("Santa Male", Vector2(TILE_SIZE * i, TILE_SIZE * j), Vector2(TILE_SIZE, TILE_SIZE),
-                                 "./assets/Atlas.png", Vector2(0, 0),
-                                 Vector2(32, 32), 0, 0, playersSpeed);
-          AddObjectToAll(SantaMale);
-          AddObjectToColliding(SantaMale);
+  for (int y = 0; y < NUM_OF_TILES_COL; y++) {
+    for (int x = 0; x < NUM_OF_TILES_ROW; x++) {
+      if (currentLevel->grid[y][x] == "MA") {
+        float xOffset = x * TILE_SIZE;
+        float yOffset = y * TILE_SIZE;
+        Vector2 tilePosition(xOffset, yOffset);
+        std::string tileName = "Tile" + std::to_string(x) + std::to_string(y);
+        Object *GroundTileMap = new Object(
+            tileName, tilePosition, Vector2(TILE_SIZE, TILE_SIZE), false,
+            "./assets/Atlas.png", Vector2(64, 0), Vector2(32, 32), -1);
+        AddObjectToAll(GroundTileMap);
+        Player *SantaMale =
+            new Player("Santa Male", Vector2(TILE_SIZE * x, TILE_SIZE * y),
+                       Vector2(TILE_SIZE, TILE_SIZE), "./assets/Atlas.png",
+                       Vector2(0, 0), Vector2(32, 32), 0, 0, playersSpeed);
+        AddObjectToAll(SantaMale);
+        AddObjectToColliding(SantaMale);
+      } else if (currentLevel->grid[y][x] == "FE") {
+        float xOffset = x * TILE_SIZE;
+        float yOffset = y * TILE_SIZE;
+        Vector2 tilePosition(xOffset, yOffset);
+        std::string tileName = "Tile" + std::to_string(x) + std::to_string(y);
+        Object *GroundTileMap = new Object(
+            tileName, tilePosition, Vector2(TILE_SIZE, TILE_SIZE), false,
+            "./assets/Atlas.png", Vector2(64, 0), Vector2(32, 32), -1);
+        AddObjectToAll(GroundTileMap);
+        Player *SantaFemale =
+            new Player("Santa Female", Vector2(TILE_SIZE * x, TILE_SIZE * y),
+                       Vector2(64, 64), "./assets/Atlas.png", Vector2(32, 0),
+                       Vector2(32, 32), 0, 1, playersSpeed);
+        AddObjectToAll(SantaFemale);
+        AddObjectToColliding(SantaFemale);
+      } else if (currentLevel->grid[y][x] == "BT") {
+        float xOffset = x * TILE_SIZE;
+        float yOffset = y * TILE_SIZE;
+        Vector2 tilePosition(xOffset, yOffset);
+        std::string tileName = "Tile" + std::to_string(x) + std::to_string(y);
+        Object *GroundTileMap = new Object(
+            tileName, tilePosition, Vector2(TILE_SIZE, TILE_SIZE), false,
+            "./assets/Atlas.png", Vector2(64, 0), Vector2(32, 32), -1);
+        AddObjectToAll(GroundTileMap);
+      } else {
+        float xOffset = x * TILE_SIZE;
+        float yOffset = y * TILE_SIZE;
+        Vector2 tilePosition(xOffset, yOffset);
+        std::string tileName = "Wall" + std::to_string(x) + std::to_string(y);
+        Object *Wall = new Object(
+            tileName, Vector2(TILE_SIZE * x, TILE_SIZE * y), Vector2(TILE_SIZE, TILE_SIZE), true,
+            "./assets/Atlas.png", Vector2(96, 0), Vector2(32, 32), 0);
+        AddObjectToAll(Wall);
+        AddObjectToColliding(Wall);
       }
     }
   }
-
-
-  // create santa male
- 
-
-  // create santa female
-  Player *SantaFemale = new Player(
-      "Santa Female", Vector2(64, 0), Vector2(64, 64), "./assets/Atlas.png",
-      Vector2(32, 0), Vector2(32, 32), 0, 1, playersSpeed);
-  AddObjectToAll(SantaFemale);
-  AddObjectToColliding(SantaFemale);
-
-  // create ground tiles
-  float tileSize = 80;
-  unsigned tilesHorizontal = Game::GetWidth() / tileSize; // 32x32 tiles
-  unsigned tilesVertical = Game::GetHeight() / tileSize;
-  for (unsigned i = 0; i < tilesHorizontal; i++) {
-    for (unsigned j = 0; j < tilesVertical; j++) {
-      float xOffset = i * tileSize;
-      float yOffset = j * tileSize;
-      Vector2 tilePosition(xOffset, yOffset);
-      std::string tileName = "Tile" + std::to_string(i) + std::to_string(j);
-      Object *GroundTileMap =
-          new Object(tileName, tilePosition, Vector2(tileSize, tileSize), false,
-                     "./assets/Atlas.png", Vector2(64, 0), Vector2(32, 32), -1);
-      AddObjectToAll(GroundTileMap);
-    }
-  }
-
-  Object *Wall = new Object(
-      "Wall", Vector2(100, 100), Vector2(tileSize, tileSize), true, "./assets/Atlas.png",
-      Vector2(64 + 32, 0), Vector2(32, 32), 1);
-  AddObjectToAll(Wall);
-  AddObjectToColliding(Wall);
-
 
   for (const auto &pair : allObjects) {
     pair.second->Begin();
@@ -109,8 +114,8 @@ void State::MoveObjectInternal(Object *object, Vector2 newPosition) {
     if (!collidingObject->bCollides)
       continue;
     // If player is just under or above the wall
-    if (collidingObject->position.x <= object->position.x + object->size.x &&
-        object->position.x <=
+    if (collidingObject->position.x < object->position.x + object->size.x &&
+        object->position.x <
             collidingObject->position.x + collidingObject->size.x) {
       // If player is above the wall
       if (collidingObject->position.y >= object->position.y + object->size.y) {
@@ -124,8 +129,8 @@ void State::MoveObjectInternal(Object *object, Vector2 newPosition) {
       }
     }
     // If player is just on the left or on the right of the wall
-    if (collidingObject->position.y <= object->position.y + object->size.y &&
-        object->position.y <=
+    if (collidingObject->position.y < object->position.y + object->size.y &&
+        object->position.y <
             collidingObject->position.y + collidingObject->size.y) {
       // If player is on the left of the wall
       if (collidingObject->position.x >= object->position.x + object->size.x) {
