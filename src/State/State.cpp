@@ -60,83 +60,86 @@ void State::InitInternal()
   {
     for (int x = 0; x < NUM_OF_TILES_ROW; x++)
     {
+      float xOffset = x * TILE_SIZE;
+      float yOffset = y * TILE_SIZE;
+      Vector2 tilePosition(xOffset, yOffset);
+      Vector2 tileSize, srcRectangle, srcRectangleSize(32, 32);
+      int zIndex;
+      bool bIsVisible, bCollides;
+      std::string src = "./assets/Atlas.png";
+
+      // Draw Background Tile
+      std::string tileName = "Tile" + std::to_string(x) + std::to_string(y);
+      tileSize = Vector2(TILE_SIZE, TILE_SIZE);
+      srcRectangle = Vector2(64, 0);
+      bCollides = false;
+      bIsVisible = true;
+      zIndex = -1;
+      Object *GroundTileMap = new Object(
+            tileName, tilePosition, tileSize, bCollides,
+            src, srcRectangle, srcRectangleSize, zIndex, bIsVisible);
+      AddObjectToAll(GroundTileMap);
+
       if (currentLevel->grid[y][x] == "MA")
       {
-        float xOffset = x * TILE_SIZE;
-        float yOffset = y * TILE_SIZE;
-        Vector2 tilePosition(xOffset, yOffset);
-        std::string tileName = "Tile" + std::to_string(x) + std::to_string(y);
-        Object *GroundTileMap = new Object(
-            tileName, tilePosition, Vector2(TILE_SIZE, TILE_SIZE), false,
-            "./assets/Atlas.png", Vector2(64, 0), Vector2(32, 32), -1, true);
-        AddObjectToAll(GroundTileMap);
+        tileSize = Vector2(64, 64);
+        srcRectangle = Vector2(0, 0);
+        zIndex = 2;
+        bIsVisible = true;
         Player *SantaMale =
-            new Player("Santa Male", Vector2(TILE_SIZE * x, TILE_SIZE * y),
-                       Vector2(64, 64), "./assets/Atlas.png",
-                       Vector2(0, 0), Vector2(32, 32), 0, true, 0, playersSpeed);
+            new Player("Santa Male", tilePosition,
+                       tileSize, src,
+                       srcRectangle, srcRectangleSize, zIndex, bIsVisible, 0, playersSpeed);
         AddObjectToAll(SantaMale);
       }
       else if (currentLevel->grid[y][x] == "FE")
       {
-        float xOffset = x * TILE_SIZE;
-        float yOffset = y * TILE_SIZE;
-        Vector2 tilePosition(xOffset, yOffset);
-        std::string tileName = "Tile" + std::to_string(x) + std::to_string(y);
-        Object *GroundTileMap = new Object(
-            tileName, tilePosition, Vector2(TILE_SIZE, TILE_SIZE), false,
-            "./assets/Atlas.png", Vector2(64, 0), Vector2(32, 32), -1, true);
-        AddObjectToAll(GroundTileMap);
+        tileSize = Vector2(64, 64);
+        srcRectangle = Vector2(32, 0);
+        zIndex = 2;
+        bIsVisible = true;
         Player *SantaFemale =
-            new Player("Santa Female", Vector2(TILE_SIZE * x, TILE_SIZE * y),
-                       Vector2(64, 64), "./assets/Atlas.png", Vector2(32, 0),
-                       Vector2(32, 32), 0, true, 1, playersSpeed);
+            new Player("Santa Female", tilePosition, tileSize, src, srcRectangle,
+                       srcRectangleSize, zIndex, bIsVisible, 1, playersSpeed);
         AddObjectToAll(SantaFemale);
       }
-      else if (currentLevel->grid[y][x] == "BT")
-      {
-        float xOffset = x * TILE_SIZE;
-        float yOffset = y * TILE_SIZE;
-        Vector2 tilePosition(xOffset, yOffset);
-        std::string tileName = "Tile" + std::to_string(x) + std::to_string(y);
-        Object *GroundTileMap = new Object(
-            tileName, tilePosition, Vector2(TILE_SIZE, TILE_SIZE), false,
-            "./assets/Atlas.png", Vector2(64, 0), Vector2(32, 32), -1, true);
-        AddObjectToAll(GroundTileMap);
-      } else if (elementOf(wallCodes, currentLevel->grid[y][x])) {
-        float xOffset = x * TILE_SIZE;
-        float yOffset = y * TILE_SIZE;
-        Vector2 tilePosition(xOffset, yOffset);
+      else if (elementOf(wallCodes, currentLevel->grid[y][x])) {
         std::string tileName = "Wall" + std::to_string(x) + std::to_string(y);
+        tileSize = Vector2(TILE_SIZE, TILE_SIZE);
+        srcRectangle = Vector2(tileCodeToTextureIndex[currentLevel->grid[y][x]] * 32, 0);
+        zIndex = 1;
+        bCollides = true;
+        bIsVisible = true;
         Object *Wall = new Object(
-            tileName, Vector2(TILE_SIZE * x, TILE_SIZE * y), Vector2(TILE_SIZE, TILE_SIZE), true,
-            "./assets/Atlas.png", Vector2(tileCodeToTextureIndex[currentLevel->grid[y][x]] * 32, 0), Vector2(32, 32), 0, true);
+            tileName, tilePosition, tileSize, bCollides,
+           src, srcRectangle, srcRectangleSize, zIndex, bIsVisible);
         AddObjectToAll(Wall);
         AddObjectToColliding(Wall);
-      } else if (currentLevel->grid[y][x][0] == 'B') {
-        std::cout << "Button" << std::endl;
-        float xOffset = x * TILE_SIZE;
-        float yOffset = y * TILE_SIZE;
+      } else if (currentLevel->grid[y][x][0] == 'B' && currentLevel->grid[y][x] != "BT") {
         int opensDoorCode = (currentLevel->grid[y][x][1] - '0');
-        Vector2 tilePosition(xOffset, yOffset);
+        tilePosition = Vector2(xOffset, yOffset);
+        tileSize = Vector2(64, 64);
+        bCollides = false;
+        srcRectangle = Vector2(15*32, 0);
+        zIndex = 0;
+        bool bIsPressed = true;
+        bIsVisible = false;
         std::string tileName = "ButtonPressed" + std::to_string(x) + std::to_string(y);
         Button* PressedButton = new Button(
-            tileName, Vector2(TILE_SIZE * x, TILE_SIZE * y), Vector2(TILE_SIZE, TILE_SIZE), true,
-            "./assets/Atlas.png", Vector2(15 * 32, 0), Vector2(32, 32), 0, false,true, opensDoorCode);
+            tileName, tilePosition, tileSize, bCollides,
+            src, srcRectangle, srcRectangleSize, zIndex, bIsPressed, bIsVisible, opensDoorCode);
         AddObjectToAll(PressedButton);
         AddObjectToColliding(PressedButton);
 
+        srcRectangle = Vector2(14*32, 0);
+        bIsPressed = false;
+        bIsVisible = false;
         tileName = "ButtonNotPressed" + std::to_string(x) + std::to_string(y);
         Button* NotPressedButton =  new Button(
-            tileName, Vector2(TILE_SIZE * x, TILE_SIZE * y), Vector2(TILE_SIZE, TILE_SIZE), true,
-            "./assets/Atlas.png", Vector2(14 * 32, 0), Vector2(32, 32), 1, true, false, opensDoorCode);
+            tileName,  tilePosition, tileSize, bCollides,
+            src, srcRectangle, srcRectangleSize, zIndex, bIsPressed, bIsVisible, opensDoorCode);
         AddObjectToAll(NotPressedButton);
         AddObjectToColliding(NotPressedButton);
-
-        tileName = "Tile" + std::to_string(x) + std::to_string(y);
-        Object *GroundTileMap = new Object(
-            tileName, tilePosition, Vector2(TILE_SIZE, TILE_SIZE), false,
-            "./assets/Atlas.png", Vector2(64, 0), Vector2(32, 32), -1, true);
-        AddObjectToAll(GroundTileMap);
       }
     }
   }
