@@ -121,7 +121,7 @@ void State::InitInternal()
         tileSize = Vector2(64, 64);
         bCollides = false;
         srcRectangle = Vector2(15*32, 0);
-        zIndex = 0;
+        zIndex = 1;
         bool bIsPressed = true;
         bIsVisible = false;
         std::string tileName = "ButtonPressed" + std::to_string(x) + std::to_string(y);
@@ -133,7 +133,8 @@ void State::InitInternal()
 
         srcRectangle = Vector2(14*32, 0);
         bIsPressed = false;
-        bIsVisible = false;
+        bIsVisible = true;
+        zIndex = 1;
         tileName = "ButtonNotPressed" + std::to_string(x) + std::to_string(y);
         Button* NotPressedButton =  new Button(
             tileName,  tilePosition, tileSize, bCollides,

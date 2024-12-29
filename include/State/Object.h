@@ -20,4 +20,5 @@ class Object
         Vector2 sourceRectanglePosition;
         Vector2 sourceRectangleSize;
         int zIndex;
+        void setBIsVisible(bool bIsVisible) { this->bIsVisible = bIsVisible; };
 };

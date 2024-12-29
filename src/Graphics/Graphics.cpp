@@ -90,12 +90,18 @@ void Graphics::RenderInternal()
     SDL_RenderClear(renderer);
     std::vector<Sprite*> spriteVector;
     for (const auto& pair : sprites) {
+        
+        if (State::GetAllObjects()[pair.first]->bIsVisible == false) {
+            std::cout << pair.first << "\n";
+            continue;
+        }
         spriteVector.push_back(pair.second);
     }
     std::sort(spriteVector.begin(), spriteVector.end(), compareByZIndex);
+
     // render all sprites
     for(Sprite* sprite : spriteVector)
-    {
+    {   
         Vector2 spritePosition = State::GetAllObjects()[sprite->GetName()]->position;
         Vector2 spriteSize = State::GetAllObjects()[sprite->GetName()]->size;
         SDL_FRect destinationRectangle = Game::Vectors2ToSdlFRect(spritePosition, spriteSize);
