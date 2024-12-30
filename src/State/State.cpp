@@ -134,6 +134,7 @@ void State::InitInternal()
         AddObjectToAll(Button1);
       } else if (currentLevel->grid[y][x][0] == 'D') {
         int doorCode = (currentLevel->grid[y][x][1] - '0');
+        bool bIsVertical = (currentLevel->grid[y][x][2] == 'V');
         tilePosition = Vector2(xOffset, yOffset);
         tileSize = Vector2(TILE_SIZE, TILE_SIZE);
         bCollides = true;
@@ -142,7 +143,7 @@ void State::InitInternal()
         std::string tileName = "Door" + std::to_string(x) + std::to_string(y);
         Door* Door1 = new Door(
             tileName, tilePosition, tileSize,
-            src, srcRectangle, srcRectangleSize, zIndex, doorCode);
+            src, srcRectangle, srcRectangleSize, zIndex, doorCode, bIsVertical);
         AddObjectToAll(Door1);
       } else if (currentLevel->grid[y][x][0] == 'K') {
         tilePosition = Vector2(xOffset, yOffset);

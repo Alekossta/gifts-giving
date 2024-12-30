@@ -112,8 +112,8 @@ void Graphics::RenderInternal() {
         Game::Vectors2ToSdlRect(sourcePosition, sourceSize);
 
     SDL_FPoint bottomRightCenter = {
-        destinationRectangle.w, // Bottom-right X
-        destinationRectangle.h  // Bottom-right Y
+        0.5 * destinationRectangle.w, // Bottom-right X
+        0.5 * destinationRectangle.h  // Bottom-right Y
     };
       sprite->Render(&sourceRectangle, &destinationRectangle,
                      State::GetAllObjects()[sprite->GetName()]->rotation,

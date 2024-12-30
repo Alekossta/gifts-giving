@@ -7,9 +7,9 @@
 
 Door::Door(const std::string& doorName, Vector2 position, Vector2 startingSize, 
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-int zIndexNew, int doorCode):
+int zIndexNew, int doorCode, bool bIsVertical):
  Object(doorName, position, startingSize, newSrcName, newSourceRectanglePosition,
-newSourceRectangleSize, zIndexNew, true, true, true), doorCode(doorCode)
+newSourceRectangleSize, zIndexNew, true, true, true, bIsVertical ? 0 : 90), doorCode(doorCode)
 {
 
 }

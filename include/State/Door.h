@@ -13,7 +13,7 @@ class Door : public Object
     public:
         Door(const std::string& doorName, Vector2 position, Vector2 startingSize, 
             const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-            int zIndexNew, int doorCode);
+            int zIndexNew, int doorCode, bool bIsVertical);
         ~Door(){};
 
         virtual void Begin() override;
