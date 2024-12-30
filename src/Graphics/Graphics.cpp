@@ -111,17 +111,13 @@ void Graphics::RenderInternal() {
     SDL_Rect sourceRectangle =
         Game::Vectors2ToSdlRect(sourcePosition, sourceSize);
 
-    if (startsWith(sprite->GetName(), "Door")) {
-      SDL_FPoint bottomRightCenter = {
-          destinationRectangle.w, // Bottom-right X
-          destinationRectangle.h  // Bottom-right Y
-      };
+    SDL_FPoint bottomRightCenter = {
+        destinationRectangle.w, // Bottom-right X
+        destinationRectangle.h  // Bottom-right Y
+    };
       sprite->Render(&sourceRectangle, &destinationRectangle,
                      State::GetAllObjects()[sprite->GetName()]->rotation,
                     &bottomRightCenter);
-    } else {
-      sprite->Render(&sourceRectangle, &destinationRectangle);
-    }
   }
   SDL_RenderPresent(renderer);
 }

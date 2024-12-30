@@ -18,4 +18,6 @@ class Door : public Object
 
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
+        void Open();
+        void Close();
 };

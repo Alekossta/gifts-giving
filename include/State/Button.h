@@ -13,7 +13,7 @@ class Button : public Object
             int zIndexNew, int opensDoorCode);
         ~Button(){};
         bool getIsActive() const { return bIsActive; };
-        bool getOpensDoorCode() const { return opensDoorCode; };
+        int getOpensDoorCode() const { return opensDoorCode; };
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
         virtual void OnOverlap(Object* overlappingObject) override {};

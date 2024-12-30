@@ -29,35 +29,35 @@ void State::InitInternal()
   LevelManager::Init();
 
   currentLevel = LevelManager::GetLevels()["Level0"];
-  tileCodeToTextureIndex["MA"] = 0;
-  tileCodeToTextureIndex["FE"] = 1;
-  tileCodeToTextureIndex["TB"] = 2;
-  tileCodeToTextureIndex["WV"] = 3;
-  tileCodeToTextureIndex["VB"] = 4;
-  tileCodeToTextureIndex["VT"] = 5;
-  tileCodeToTextureIndex["WH"] = 6;
-  tileCodeToTextureIndex["HL"] = 7;
-  tileCodeToTextureIndex["HR"] = 8;
-  tileCodeToTextureIndex["T1"] = 9;
-  tileCodeToTextureIndex["C1"] = 10;
-  tileCodeToTextureIndex["C2"] = 11;
-  tileCodeToTextureIndex["C3"] = 12;
-  tileCodeToTextureIndex["C4"] = 13;
+  tileCodeToTextureIndex["MA0"] = 0;
+  tileCodeToTextureIndex["FE0"] = 1;
+  tileCodeToTextureIndex["TB0"] = 2;
+  tileCodeToTextureIndex["WV0"] = 3;
+  tileCodeToTextureIndex["VB0"] = 4;
+  tileCodeToTextureIndex["VT0"] = 5;
+  tileCodeToTextureIndex["WH0"] = 6;
+  tileCodeToTextureIndex["HL0"] = 7;
+  tileCodeToTextureIndex["HR0"] = 8;
+  tileCodeToTextureIndex["T10"] = 9;
+  tileCodeToTextureIndex["C10"] = 10;
+  tileCodeToTextureIndex["C20"] = 11;
+  tileCodeToTextureIndex["C30"] = 12;
+  tileCodeToTextureIndex["C40"] = 13;
 
-  wallCodes.push_back("VB");
-  wallCodes.push_back("VT");
-  wallCodes.push_back("WV");
-  wallCodes.push_back("WH");
-  wallCodes.push_back("HL");
-  wallCodes.push_back("HR");
-  wallCodes.push_back("C1");
-  wallCodes.push_back("C2");
-  wallCodes.push_back("C3");
-  wallCodes.push_back("C4");
-  wallCodes.push_back("T1");
-  wallCodes.push_back("T2");
-  wallCodes.push_back("T3");
-  wallCodes.push_back("T4");
+  wallCodes.push_back("VB0");
+  wallCodes.push_back("VT0");
+  wallCodes.push_back("WV0");
+  wallCodes.push_back("WH0");
+  wallCodes.push_back("HL0");
+  wallCodes.push_back("HR0");
+  wallCodes.push_back("C10");
+  wallCodes.push_back("C20");
+  wallCodes.push_back("C30");
+  wallCodes.push_back("C40");
+  wallCodes.push_back("T10");
+  wallCodes.push_back("T20");
+  wallCodes.push_back("T30");
+  wallCodes.push_back("T40");
 
   for (int y = 0; y < NUM_OF_TILES_COL; y++)
   {
@@ -82,7 +82,7 @@ void State::InitInternal()
             src, srcRectangle, srcRectangleSize, zIndex, bCollides);
       AddObjectToAll(GroundTileMap);
 
-      if (currentLevel->grid[y][x] == "MA")
+      if (currentLevel->grid[y][x] == "MA0")
       {
         tileSize = Vector2(64, 64);
         srcRectangle = Vector2(1, 0);
@@ -96,7 +96,7 @@ void State::InitInternal()
         SantaMale->CollisionIgnoreTags.push_back("Player");
         AddObjectToAll(SantaMale);
       }
-      else if (currentLevel->grid[y][x] == "FE")
+      else if (currentLevel->grid[y][x] == "FE0")
       {
         tileSize = Vector2(64, 64);
         srcRectangle = Vector2(33, 0);
@@ -120,7 +120,7 @@ void State::InitInternal()
             tileName, tilePosition, tileSize,
            src, srcRectangle, srcRectangleSize, zIndex);
         AddObjectToAll(Wall);
-      } else if (currentLevel->grid[y][x][0] == 'B' && currentLevel->grid[y][x] != "BT") {
+      } else if (currentLevel->grid[y][x][0] == 'B' && currentLevel->grid[y][x] != "BT0") {
         int opensDoorCode = (currentLevel->grid[y][x][1] - '0');
         tilePosition = Vector2(xOffset, yOffset);
         tileSize = Vector2(64, 64);
@@ -135,10 +135,10 @@ void State::InitInternal()
       } else if (currentLevel->grid[y][x][0] == 'D') {
         int doorCode = (currentLevel->grid[y][x][1] - '0');
         tilePosition = Vector2(xOffset, yOffset);
-        tileSize = Vector2(64, 64);
+        tileSize = Vector2(TILE_SIZE, TILE_SIZE);
         bCollides = true;
-        srcRectangle = Vector2(15*32, 0);
-        zIndex = 1;
+        srcRectangle = Vector2(17*32, 0);
+        zIndex = 2;
         std::string tileName = "Door" + std::to_string(x) + std::to_string(y);
         Door* Door1 = new Door(
             tileName, tilePosition, tileSize,
