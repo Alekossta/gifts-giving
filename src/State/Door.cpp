@@ -8,7 +8,7 @@ Door::Door(const std::string& doorName, Vector2 position, Vector2 startingSize,
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
 int zIndexNew, int doorCode):
  Object(doorName, position, startingSize, newSrcName, newSourceRectanglePosition,
-newSourceRectangleSize, zIndexNew, false, true, true), doorCode(doorCode)
+newSourceRectangleSize, zIndexNew, true, true, true), doorCode(doorCode)
 {
 
 }
@@ -20,15 +20,6 @@ void Door::Update(float deltatime)
 	
     for (const auto &button : interactingButtons) {
         bDoorOpens = bDoorOpens || button->getIsActive();
-    }
-
-    if (bDoorOpens) {
-        if (90  - rotation > 10e-6) {   // Rotation is less than 90 -> the door must open more
-            rotation = fmin(90, rotation + deltatime * 500);
-        }
-    } else {
-        if (rotation > 10e-6)   // Rotation is not 0 -> the door must close more
-        rotation = fmax(0, rotation - deltatime * 500);
     }
 
 }
