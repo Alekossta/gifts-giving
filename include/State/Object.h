@@ -8,7 +8,7 @@ class Object
     public:
         Object(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,
          const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-         int zIndexNew,bool bCollidesNew=true, bool bOverlapsNew=true, bool bIsVisibleNew=true);
+         int zIndexNew,bool bCollidesNew=true, bool bOverlapsNew=true, bool bIsVisibleNew=true, float rotation = 0.0);
         virtual ~Object();
         virtual void Begin();
         virtual void Update(float deltatime);
@@ -25,4 +25,5 @@ class Object
         std::vector<std::string> CollisionIgnoreTags;
         bool bIsVisible;
         void setBIsVisible(bool bIsVisible) { this->bIsVisible = bIsVisible; };
+        float rotation;
 };

@@ -6,7 +6,7 @@ Button::Button(const std::string& buttonName, Vector2 position, Vector2 starting
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
 int zIndexNew, int opensDoorCode):
  Object(buttonName, position, startingSize, newSrcName, newSourceRectanglePosition,
-newSourceRectangleSize, zIndexNew, false, true, true),
+newSourceRectangleSize, zIndexNew, false, true, true, 0.0),
  bIsActive(false), opensDoorCode(opensDoorCode) 
 {
 

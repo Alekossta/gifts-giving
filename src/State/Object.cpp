@@ -2,10 +2,10 @@
 
 Object::Object(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,
     const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-    int zIndexNew,bool bCollidesNew, bool bOverlapsNew, bool bIsVisibleNew)
+    int zIndexNew,bool bCollidesNew, bool bOverlapsNew, bool bIsVisibleNew, float rotation)
  : name(newName), position(startingPosition), size(startingSize), srcName(newSrcName),
- sourceRectanglePosition(newSourceRectanglePosition), sourceRectangleSize(newSourceRectangleSize), zIndex(zIndexNew),
-bCollides(bCollidesNew), bIsVisible(bIsVisibleNew)
+ sourceRectanglePosition(newSourceRectanglePosition), sourceRectangleSize(newSourceRectangleSize), zIndex(zIndexNew), 
+bCollides(bCollidesNew), bIsVisible(bIsVisibleNew), rotation(rotation)
 {
 
 }

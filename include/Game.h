@@ -6,6 +6,7 @@
 #define TILE_SIZE 80
 #define NUM_OF_TILES_ROW (1280 / 80)
 #define NUM_OF_TILES_COL (800 / 80)
+#define PI 3.14
 
 class Game {
 

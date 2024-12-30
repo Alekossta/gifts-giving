@@ -12,6 +12,8 @@ class Button : public Object
             const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
             int zIndexNew, int opensDoorCode);
         ~Button(){};
+        bool getIsActive() const { return bIsActive; };
+        bool getOpensDoorCode() const { return opensDoorCode; };
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
         virtual void OnOverlap(Object* overlappingObject) override {};

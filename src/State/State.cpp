@@ -5,6 +5,7 @@
 #include "State/Object.h"
 #include "State/Player.h"
 #include "State/Button.h"
+#include "State/Door.h"
 #include <algorithm>
 
 bool elementOf(std::vector<std::string> &vec, std::string element) {
@@ -66,7 +67,7 @@ void State::InitInternal()
       Vector2 tilePosition(xOffset, yOffset);
       Vector2 tileSize, srcRectangle, srcRectangleSize(32, 32);
       int zIndex;
-      bool bIsVisible, bCollides;
+      bool bCollides;
       std::string src = "./assets/Atlas.png";
 
       // Draw Background Tile
@@ -77,7 +78,7 @@ void State::InitInternal()
       zIndex = -1;
       Object *GroundTileMap = new Object(
             tileName, tilePosition, tileSize,
-            src, srcRectangle, srcRectangleSize, zIndex, false);
+            src, srcRectangle, srcRectangleSize, zIndex, bCollides);
       AddObjectToAll(GroundTileMap);
 
       if (currentLevel->grid[y][x] == "MA")
@@ -85,7 +86,6 @@ void State::InitInternal()
         tileSize = Vector2(64, 64);
         srcRectangle = Vector2(0, 0);
         zIndex = 2;
-        bIsVisible = true;
         Player *SantaMale =
             new Player("Santa Male", tilePosition,
                        tileSize, src,
@@ -99,7 +99,6 @@ void State::InitInternal()
         tileSize = Vector2(64, 64);
         srcRectangle = Vector2(32, 0);
         zIndex = 2;
-        bIsVisible = true;
         Player *SantaFemale =
             new Player("Santa Female", tilePosition, tileSize, src, srcRectangle,
                        srcRectangleSize, zIndex, 1, playersSpeed);
@@ -113,7 +112,6 @@ void State::InitInternal()
         srcRectangle = Vector2(tileCodeToTextureIndex[currentLevel->grid[y][x]] * 32, 0);
         zIndex = 1;
         bCollides = true;
-        bIsVisible = true;
         Object *Wall = new Object(
             tileName, tilePosition, tileSize,
            src, srcRectangle, srcRectangleSize, zIndex);
@@ -125,13 +123,23 @@ void State::InitInternal()
         bCollides = false;
         srcRectangle = Vector2(15*32, 0);
         zIndex = 1;
-        bool bIsPressed = true;
-        bIsVisible = false;
-        std::string tileName = "ButtonPressed" + std::to_string(x) + std::to_string(y);
+        std::string tileName = "Button" + std::to_string(x) + std::to_string(y);
         Button* Button1 = new Button(
             tileName, tilePosition, tileSize,
             src, srcRectangle, srcRectangleSize, zIndex, opensDoorCode);
         AddObjectToAll(Button1);
+      } else if (currentLevel->grid[y][x][0] == 'D') {
+        int doorCode = (currentLevel->grid[y][x][1] - '0');
+        tilePosition = Vector2(xOffset, yOffset);
+        tileSize = Vector2(64, 64);
+        bCollides = true;
+        srcRectangle = Vector2(15*32, 0);
+        zIndex = 1;
+        std::string tileName = "Door" + std::to_string(x) + std::to_string(y);
+        Door* Door1 = new Door(
+            tileName, tilePosition, tileSize,
+            src, srcRectangle, srcRectangleSize, zIndex, doorCode);
+        AddObjectToAll(Door1);
       }
     }
   }
