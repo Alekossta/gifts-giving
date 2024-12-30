@@ -21,16 +21,15 @@ class State {
         ~State();
 
         std::map<std::string, Object*> allObjects;
-        std::vector<Object*> collidingObjects;
         void MoveObjectInternal(Object* object, Vector2 newPosition);
         void AddObjectToAll(Object* objectToAdd);
-        void AddObjectToColliding(Object* objectToAdd);
     public:
         static State& GetInstance();
         static void Update(float deltatime);
         static void Init();
         static void MoveObject(Object* object, Vector2 newPosition);
         static std::map<std::string, Object*>& GetAllObjects() {return GetInstance().allObjects;};
+        static bool AreObjectsOverlapping(Object* object1, Object* object2); 
         std::map<std::string, int> tileCodeToTextureIndex;
         std::vector<std::string> wallCodes;
 };

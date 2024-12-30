@@ -53,7 +53,7 @@ void Graphics::InitInternal(const std::string& windowName, unsigned width, unsig
 
         // create a sprite for each object
         SDL_Rect sourceRectangle = Game::Vectors2ToSdlRect(object->sourceRectanglePosition, object->sourceRectangleSize);
-        Sprite* newSprite = new Sprite(object->name, spriteTexture, sourceRectangle, object->zIndex);
+        Sprite* newSprite = new Sprite(object->name, spriteTexture, object->zIndex);
         sprites[object->name] = newSprite;
     }
 }
@@ -102,10 +102,17 @@ void Graphics::RenderInternal()
     // render all sprites
     for(Sprite* sprite : spriteVector)
     {   
+        // get source rectangle
         Vector2 spritePosition = State::GetAllObjects()[sprite->GetName()]->position;
         Vector2 spriteSize = State::GetAllObjects()[sprite->GetName()]->size;
         SDL_FRect destinationRectangle = Game::Vectors2ToSdlFRect(spritePosition, spriteSize);
-        sprite->Render(destinationRectangle);
+
+        // get destination rectangle
+        Vector2 sourcePosition = State::GetAllObjects()[sprite->GetName()]->sourceRectanglePosition;
+        Vector2 sourceSize = State::GetAllObjects()[sprite->GetName()]->sourceRectangleSize;
+        SDL_Rect sourceRectagnle = Game::Vectors2ToSdlRect(sourcePosition, sourceSize);
+
+        sprite->Render(destinationRectangle, sourceRectagnle);
     }
     SDL_RenderPresent(renderer);
 }

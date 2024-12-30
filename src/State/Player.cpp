@@ -5,9 +5,9 @@
 
 Player::Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize,
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-int zIndexNew,bool bIsVisibleNew, unsigned newPlayerIndex, float newPlayerSpeed) :
-Object(playerName, startingPosition, startingSize, false, newSrcName,newSourceRectanglePosition,
- newSourceRectangleSize, zIndexNew, bIsVisibleNew),  playerIndex(newPlayerIndex), playerSpeed(newPlayerSpeed)
+int zIndexNew, unsigned newPlayerIndex, float newPlayerSpeed) :
+Object(playerName, startingPosition, startingSize, newSrcName,newSourceRectanglePosition,
+ newSourceRectangleSize, zIndexNew),  playerIndex(newPlayerIndex), playerSpeed(newPlayerSpeed)
 {
 
 }
@@ -21,34 +21,6 @@ void Player::Begin()
 {
 
 }
-
-bool CollidesHelper(Object* object1, Object* object2) {
-    return object1->position.x < object2->position.x + object2->size.x &&
-           object1->position.x + object1->size.x > object2->position.x &&
-           object1->position.y < object2->position.y + object2->size.y &&
-           object1->position.y + object1->size.y > object2->position.y;
-}
-
-bool Collides(Object *object1, Object *object2) {
-    return CollidesHelper(object1, object2) || CollidesHelper(object2, object1);
-}
-
-bool starts_with(const std::string& str, const std::string& prefix) {
-    return str.size() >= prefix.size() && 
-           str.compare(0, prefix.size(), prefix) == 0;
-}
-
-void Player::CheckButtonCollision() {
-    for (auto &[name, object] : State::GetAllObjects()) {
-        if (starts_with(name, "ButtonNotPressed") || starts_with(name, "ButtonPressed")) {
-            bool collides = Collides(this, object);
-          //  std::cout << "calling\n";
-            object->setBIsVisible(starts_with(name, "ButtonPressed") == collides);
-          //  std::cout << "called\n";
-        }
-    }
-}
-
 
 void Player::Update(float deltatime)
 {
@@ -83,5 +55,4 @@ void Player::Update(float deltatime)
     
     Vector2 newPosition = position + movementDirection * deltatime * playerSpeed;
     State::MoveObject(this, newPosition);
-    CheckButtonCollision();
 }

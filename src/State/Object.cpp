@@ -1,10 +1,11 @@
 #include "State/Object.h"
 
-Object::Object(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,bool bCollidesNew,
-const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize, int zIndexNew, bool bIsVisibleNew)
- : name(newName), position(startingPosition), size(startingSize), bCollides(bCollidesNew), srcName(newSrcName),
+Object::Object(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,
+    const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
+    int zIndexNew,bool bCollidesNew, bool bOverlapsNew, bool bIsVisibleNew)
+ : name(newName), position(startingPosition), size(startingSize), srcName(newSrcName),
  sourceRectanglePosition(newSourceRectanglePosition), sourceRectangleSize(newSourceRectangleSize), zIndex(zIndexNew),
-bIsVisible(bIsVisibleNew)
+bCollides(bCollidesNew), bIsVisible(bIsVisibleNew)
 {
 
 }
@@ -22,4 +23,9 @@ void Object::Begin()
 void Object::Update(float deltatime)
 {
 
+}
+
+void Object::OnOverlap(Object* overlappingObject)
+{
+    
 }

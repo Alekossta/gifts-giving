@@ -5,6 +5,7 @@
 #include "State/Object.h"
 #include "State/Player.h"
 #include "State/Button.h"
+#include <algorithm>
 
 bool elementOf(std::vector<std::string> &vec, std::string element) {
   for (size_t i = 0; i < vec.size(); i++)
@@ -73,11 +74,10 @@ void State::InitInternal()
       tileSize = Vector2(TILE_SIZE, TILE_SIZE);
       srcRectangle = Vector2(64, 0);
       bCollides = false;
-      bIsVisible = true;
       zIndex = -1;
       Object *GroundTileMap = new Object(
-            tileName, tilePosition, tileSize, bCollides,
-            src, srcRectangle, srcRectangleSize, zIndex, bIsVisible);
+            tileName, tilePosition, tileSize,
+            src, srcRectangle, srcRectangleSize, zIndex, false);
       AddObjectToAll(GroundTileMap);
 
       if (currentLevel->grid[y][x] == "MA")
@@ -89,7 +89,9 @@ void State::InitInternal()
         Player *SantaMale =
             new Player("Santa Male", tilePosition,
                        tileSize, src,
-                       srcRectangle, srcRectangleSize, zIndex, bIsVisible, 0, playersSpeed);
+                       srcRectangle, srcRectangleSize, zIndex, 0, playersSpeed);
+        SantaMale->Tags.push_back("Player");
+        SantaMale->CollisionIgnoreTags.push_back("Player");
         AddObjectToAll(SantaMale);
       }
       else if (currentLevel->grid[y][x] == "FE")
@@ -100,7 +102,9 @@ void State::InitInternal()
         bIsVisible = true;
         Player *SantaFemale =
             new Player("Santa Female", tilePosition, tileSize, src, srcRectangle,
-                       srcRectangleSize, zIndex, bIsVisible, 1, playersSpeed);
+                       srcRectangleSize, zIndex, 1, playersSpeed);
+        SantaFemale->Tags.push_back("Player");
+        SantaFemale->CollisionIgnoreTags.push_back("Player");
         AddObjectToAll(SantaFemale);
       }
       else if (elementOf(wallCodes, currentLevel->grid[y][x])) {
@@ -111,10 +115,9 @@ void State::InitInternal()
         bCollides = true;
         bIsVisible = true;
         Object *Wall = new Object(
-            tileName, tilePosition, tileSize, bCollides,
-           src, srcRectangle, srcRectangleSize, zIndex, bIsVisible);
+            tileName, tilePosition, tileSize,
+           src, srcRectangle, srcRectangleSize, zIndex);
         AddObjectToAll(Wall);
-        AddObjectToColliding(Wall);
       } else if (currentLevel->grid[y][x][0] == 'B' && currentLevel->grid[y][x] != "BT") {
         int opensDoorCode = (currentLevel->grid[y][x][1] - '0');
         tilePosition = Vector2(xOffset, yOffset);
@@ -125,22 +128,10 @@ void State::InitInternal()
         bool bIsPressed = true;
         bIsVisible = false;
         std::string tileName = "ButtonPressed" + std::to_string(x) + std::to_string(y);
-        Button* PressedButton = new Button(
-            tileName, tilePosition, tileSize, bCollides,
-            src, srcRectangle, srcRectangleSize, zIndex, bIsPressed, bIsVisible, opensDoorCode);
-        AddObjectToAll(PressedButton);
-        AddObjectToColliding(PressedButton);
-
-        srcRectangle = Vector2(14*32, 0);
-        bIsPressed = false;
-        bIsVisible = true;
-        zIndex = 1;
-        tileName = "ButtonNotPressed" + std::to_string(x) + std::to_string(y);
-        Button* NotPressedButton =  new Button(
-            tileName,  tilePosition, tileSize, bCollides,
-            src, srcRectangle, srcRectangleSize, zIndex, bIsPressed, bIsVisible, opensDoorCode);
-        AddObjectToAll(NotPressedButton);
-        AddObjectToColliding(NotPressedButton);
+        Button* Button1 = new Button(
+            tileName, tilePosition, tileSize,
+            src, srcRectangle, srcRectangleSize, zIndex, opensDoorCode);
+        AddObjectToAll(Button1);
       }
     }
   }
@@ -170,12 +161,32 @@ void State::AddObjectToAll(Object *objectToAdd)
     allObjects[objectToAdd->name] = objectToAdd;
   }
 }
-void State::AddObjectToColliding(Object *objectToAdd)
+
+bool State::AreObjectsOverlapping(Object* object1, Object* object2)
 {
-  if (objectToAdd)
-  {
-    collidingObjects.push_back(objectToAdd);
-  }
+  // check x
+  float object1EndX = object1->position.x + object1->size.x;
+  float object2EndX = object2->position.x + object2->size.x;
+
+  if(object1->position.x >= object2EndX || object2->position.x >= object1EndX) return false;
+
+
+  // check y
+  float object1EndY = object1->position.y + object1->size.y;
+  float object2EndY = object2->position.y + object2->size.y;
+
+  if(object1->position.y >= object2EndY || object2->position.y >= object1EndY) return false;
+
+  return true;
+}
+
+bool hasCommonElement(const std::vector<std::string>& vec1, const std::vector<std::string>& vec2) {
+    for (const auto& item : vec1) {
+        if (std::find(vec2.begin(), vec2.end(), item) != vec2.end()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void State::MoveObjectInternal(Object *object, Vector2 newPosition)
@@ -193,8 +204,12 @@ void State::MoveObjectInternal(Object *object, Vector2 newPosition)
 
   for (const auto &[name, collidingObject] : State::GetAllObjects())
   {
-    if (!collidingObject->bCollides)
+    if (!collidingObject->bCollides ||
+     hasCommonElement(collidingObject->Tags, object->CollisionIgnoreTags))
+    {
       continue;
+    }
+
     // If player is just under or above the wall
     if (collidingObject->position.x < object->position.x + object->size.x &&
         object->position.x <
@@ -207,7 +222,7 @@ void State::MoveObjectInternal(Object *object, Vector2 newPosition)
         maxY = fmin(maxY, collidingObject->position.y - object->size.y);
       }
       else if (collidingObject->position.y + collidingObject->size.y <=
-               object->position.y)
+              object->position.y)
       { // If player is under the wall
         // Player can move up to the lower side of the wall
         minY =
@@ -226,7 +241,7 @@ void State::MoveObjectInternal(Object *object, Vector2 newPosition)
         maxX = fmin(maxX, collidingObject->position.x - object->size.x);
       }
       else if (collidingObject->position.x + collidingObject->size.x <=
-               object->position.x)
+              object->position.x)
       { // If player is on the right of the wall
         // The player can move up to the right side of the wall
         minX =
