@@ -85,7 +85,9 @@ void Door::Close()
     
     if (State::AreObjectsOverlapping(this, player1)) {
         player = player1;
-    } else if (State::AreObjectsClose(this, player2)) {
+    } 
+    
+    if (State::AreObjectsOverlapping(this, player2)) {
         player = player2;
     }
 
