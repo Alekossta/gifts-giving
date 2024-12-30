@@ -6,6 +6,7 @@
 #include "State/Player.h"
 #include "State/Button.h"
 #include "State/Door.h"
+#include "State/Child.h"
 #include <algorithm>
 
 bool elementOf(std::vector<std::string> &vec, std::string element) {
@@ -140,6 +141,17 @@ void State::InitInternal()
             tileName, tilePosition, tileSize,
             src, srcRectangle, srcRectangleSize, zIndex, doorCode);
         AddObjectToAll(Door1);
+      } else if (currentLevel->grid[y][x][0] == 'K') {
+        tilePosition = Vector2(xOffset, yOffset);
+        tileSize = Vector2(64, 64);
+        bCollides = true;
+        srcRectangle = Vector2(15*32, 0);
+        zIndex = 1;
+        std::string tileName = "Child" + std::to_string(x) + std::to_string(y);
+        Child* Child1 = new Child(
+            tileName, tilePosition, tileSize,
+            src, srcRectangle, srcRectangleSize, zIndex);
+        AddObjectToAll(Child1);
       }
     }
   }
@@ -186,6 +198,12 @@ bool State::AreObjectsOverlapping(Object* object1, Object* object2)
   if(object1->position.y >= object2EndY || object2->position.y >= object1EndY) return false;
 
   return true;
+}
+
+bool State::AreObjectsClose(Object* object1, Object* object2) 
+{
+  return fabs(object1->position.x + object1->size.x - object2->position.x) < 10 && 
+         fabs(object1->position.y + object1->size.y - object2->position.y) < 10;
 }
 
 bool hasCommonElement(const std::vector<std::string>& vec1, const std::vector<std::string>& vec2) {
