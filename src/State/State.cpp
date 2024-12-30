@@ -85,7 +85,8 @@ void State::InitInternal()
       if (currentLevel->grid[y][x] == "MA")
       {
         tileSize = Vector2(64, 64);
-        srcRectangle = Vector2(0, 0);
+        srcRectangle = Vector2(1, 0);
+        srcRectangleSize = Vector2(26, 32);
         zIndex = 2;
         Player *SantaMale =
             new Player("Santa Male", tilePosition,
@@ -98,8 +99,10 @@ void State::InitInternal()
       else if (currentLevel->grid[y][x] == "FE")
       {
         tileSize = Vector2(64, 64);
-        srcRectangle = Vector2(32, 0);
+        srcRectangle = Vector2(33, 0);
+
         zIndex = 2;
+        srcRectangleSize = Vector2(26, 32);
         Player *SantaFemale =
             new Player("Santa Female", tilePosition, tileSize, src, srcRectangle,
                        srcRectangleSize, zIndex, 1, playersSpeed);
