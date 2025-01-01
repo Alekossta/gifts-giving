@@ -17,7 +17,12 @@ Texture::Texture(SDL_Texture* newTexture, const std::string& newSrc) : src(newSr
     }
 }
 
-Texture::~Texture()
+void Texture::Destroy()
 {
     SDL_DestroyTexture(texture);
+}
+
+Texture::~Texture()
+{
+    Destroy();
 }

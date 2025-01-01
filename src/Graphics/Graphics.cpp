@@ -3,7 +3,7 @@
 #include "General.h"
 #include "Graphics/Texture.h"
 #include "State/State.h"
-#include "UI/TextBox.h"
+#include "State/TextBox.h"
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -16,19 +16,18 @@ Graphics &Graphics::GetInstance() {
 }
 
 // Initialization
-void Graphics::InitInternal(const std::string &windowName, unsigned width,
-                            unsigned height) {  
+void Graphics::InitInternal(const std::string &windowName, unsigned width,unsigned height) 
+{  
 
-  window =
-      SDL_CreateWindow(windowName.c_str(), SDL_WINDOWPOS_CENTERED,
-                       SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+  window =  SDL_CreateWindow(windowName.c_str(), SDL_WINDOWPOS_CENTERED,
+  SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+
   if (!window) {
     std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
     throw std::runtime_error("Failed to create window");
   }
 
-  renderer = SDL_CreateRenderer(
-      window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!renderer) {
     std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
     SDL_DestroyWindow(window);
@@ -37,12 +36,14 @@ void Graphics::InitInternal(const std::string &windowName, unsigned width,
 
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-  for (const auto &[name, object] : State::GetAllObjects()) {
-        if (startsWith(name, "text")) {
+  for (const auto &[name, object] : State::GetAllObjects()) 
+  {   
+    TextBox* text = dynamic_cast<TextBox*>(object);    
+    if (text) 
+    {
         // Text sprites do not have an src rectangle or an image related to them
         // like regualar sprites. That's why their textures are created separately
-        TextBox* text = dynamic_cast<TextBox*>(object);       
-        SDL_Surface* textSurface = TTF_RenderText_Solid(text->getFont(), text->getText().c_str(), {0, 0, 0});
+        SDL_Surface* textSurface = TTF_RenderText_Solid(Game::GetGameFont(), text->getText().c_str(), {0, 0, 0});
 
         // Create texture from surface
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -50,13 +51,14 @@ void Graphics::InitInternal(const std::string &windowName, unsigned width,
 
         // Calculate text size
         int w, h;
-        TTF_SizeText(text->getFont(), text->getText().c_str(), &w, &h);
+        TTF_SizeText(Game::GetGameFont(), text->getText().c_str(), &w, &h);
         object->size = Vector2(w, h);
 
-        Texture* textTexture = new Texture(texture, "");
-        Sprite* newSprite = new Sprite(name, textTexture, object->zIndex);
+        Sprite* newSprite = new Text(name, texture, object->zIndex);
         sprites[name] = newSprite;
-    } else {
+    } 
+    else // is normal object
+    {
         auto foundTexturePair = textures.find(object->srcName);
         Texture* spriteTexture = NULL;
         if (foundTexturePair ==
@@ -114,35 +116,37 @@ void Graphics::RenderInternal() {
 
   // render all sprites
   for (Sprite *sprite : spriteVector) {
-    // get source rectangle
-    Vector2 spritePosition =
-        State::GetAllObjects()[sprite->GetName()]->position;
-    Vector2 spriteSize = State::GetAllObjects()[sprite->GetName()]->size;
-    SDL_FRect destinationRectangle =
-        Game::Vectors2ToSdlFRect(spritePosition, spriteSize);
 
-    if (startsWith(sprite->GetName(), "text")) {
-      SDL_Rect destinationRectangle =
-        Game::Vectors2ToSdlRect(spritePosition, spriteSize);
-      SDL_RenderCopy(renderer, sprite->GetTexture(), NULL, &destinationRectangle);
-    } else {
+    Object* correspondingObject = State::GetAllObjects()[sprite->GetName()];
+    if(correspondingObject)
+    {
+      // get sprite (destination rectangle) position and size
+      Vector2 spritePosition = State::GetAllObjects()[sprite->GetName()]->position;
+      Vector2 spriteSize = State::GetAllObjects()[sprite->GetName()]->size;
+      SDL_FRect destinationRectangle = Game::Vectors2ToSdlFRect(spritePosition, spriteSize);
 
-    // get destination rectangle
-    Vector2 sourcePosition =
-        State::GetAllObjects()[sprite->GetName()]->sourceRectanglePosition;
-    Vector2 sourceSize =
-        State::GetAllObjects()[sprite->GetName()]->sourceRectangleSize;
-    SDL_Rect sourceRectangle =
-        Game::Vectors2ToSdlRect(sourcePosition, sourceSize);
+      SDL_FPoint bottomRightCenter = {
+          0.5f * destinationRectangle.w, // Bottom-right X
+          0.5f * destinationRectangle.h  // Bottom-right Y
+      };
 
-    SDL_FPoint bottomRightCenter = {
-        0.5f * destinationRectangle.w, // Bottom-right X
-        0.5f * destinationRectangle.h  // Bottom-right Y
-    };
-      sprite->Render(&sourceRectangle, &destinationRectangle,
-                     State::GetAllObjects()[sprite->GetName()]->rotation,
-                    &bottomRightCenter);
-  }
+      TextBox* textBox = dynamic_cast<TextBox*>(correspondingObject);
+      if(!textBox)
+      {
+        // get source rectangle position and size
+        Vector2 sourcePosition = State::GetAllObjects()[sprite->GetName()]->sourceRectanglePosition;
+        Vector2 sourceSize = State::GetAllObjects()[sprite->GetName()]->sourceRectangleSize;
+        SDL_Rect sourceRectangle =Game::Vectors2ToSdlRect(sourcePosition, sourceSize);
+
+        sprite->Render(&sourceRectangle, &destinationRectangle,correspondingObject->rotation,
+          &bottomRightCenter);
+      }
+      else
+      {
+        sprite->Render(NULL, &destinationRectangle,correspondingObject->rotation,
+          &bottomRightCenter);
+      }
+    }
   }
   SDL_RenderPresent(renderer);
 }

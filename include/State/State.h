@@ -4,6 +4,7 @@
 #include <map>
 #include "Object.h"
 #include "Input/Input.h"
+#include "State/TextBox.h"
 #include "LevelManager/Level.h"
 
 class Game;
@@ -26,6 +27,9 @@ class State {
 
         unsigned int score;
         unsigned int lives;
+
+        TextBox* livesText = NULL;
+        TextBox* scoreText = NULL;
     public:
         static State& GetInstance();
         static void Update(float deltatime);

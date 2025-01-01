@@ -7,7 +7,6 @@
 #include "State/Button.h"
 #include "State/Door.h"
 #include "State/Child.h"
-#include "UI/TextBox.h"
 #include <algorithm>
 
 bool elementOf(std::vector<std::string> &vec, std::string element) {
@@ -162,10 +161,15 @@ void State::InitInternal()
     }
   }
 
-  Vector2 position(100, 100);
-  // Size is irrelevant -> it will be calculated in Graphics.Init() based on the font
-  TextBox* Text1 = new TextBox("text", position, {}, 2, "EXAMPLE TEXT", Game::GetGameFont());
-  AddObjectToAll(Text1);
+  Vector2 positionLivesText(25, 25);
+  livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3", Game::GetGameFont());
+  AddObjectToAll(livesText);
+
+  Vector2 positionScoreText(Game::GetWidth() - 25, 25);
+  scoreText = new TextBox("ScoreText", positionScoreText, {}, 2, "1", Game::GetGameFont());
+  AddObjectToAll(scoreText);
+
+  // call begin for all objects
   for (const auto &pair : allObjects)
   {
     pair.second->Begin();
@@ -180,6 +184,8 @@ void State::UpdateInternal(float deltatime)
   {
     pair.second->Update(deltatime);
   }
+  if(livesText) livesText->setText(std::to_string(lives));
+  if(scoreText) scoreText->setText(std::to_string(score));
 }
 
 void State::Update(float deltatime) { GetInstance().UpdateInternal(deltatime); }

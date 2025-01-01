@@ -12,7 +12,7 @@ class Sprite
     public:
         Sprite(const std::string& newName, Texture* newTexture, int zIndexNew);
         
-        void Render(const SDL_Rect* sourceRectangle, 
+        virtual void Render(const SDL_Rect* sourceRectangle, 
                   const SDL_FRect* destinationRectangle, 
                   float angle = 0.0f, 
                   const SDL_FPoint* center = nullptr, 
@@ -21,4 +21,5 @@ class Sprite
         std::string GetName() const {return name;};
         int GetIndexZ() const {return zIndex;};
         SDL_Texture* GetTexture() const { return texture->GetTexture(); };
+        void SetTexture(Texture* newTexture);
 };
