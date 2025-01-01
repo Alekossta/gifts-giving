@@ -23,6 +23,9 @@ class State {
         std::map<std::string, Object*> allObjects;
         void MoveObjectInternal(Object* object, Vector2 newPosition);
         void AddObjectToAll(Object* objectToAdd);
+
+        unsigned int score;
+        unsigned int lives;
     public:
         static State& GetInstance();
         static void Update(float deltatime);

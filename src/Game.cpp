@@ -9,6 +9,8 @@ void Game::InitInternal(const std::string& windowName, unsigned newWidth, unsign
 {
     width = newWidth;
     height = newHeight;
+    TTF_Init(); 
+    gameFont = TTF_OpenFont("assets/fonts/Roboto-Black.ttf", 20);
 
     SetIsRunning(true);
 

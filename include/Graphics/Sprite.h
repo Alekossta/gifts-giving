@@ -20,4 +20,5 @@ class Sprite
         ~Sprite();
         std::string GetName() const {return name;};
         int GetIndexZ() const {return zIndex;};
+        SDL_Texture* GetTexture() const { return texture->GetTexture(); };
 };

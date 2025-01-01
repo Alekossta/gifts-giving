@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include "Math/Vector2.h"
+#include <SDL2/SDL_ttf.h>
 
 #define TILE_SIZE 80
 #define NUM_OF_TILES_ROW (1280 / 80)
@@ -26,6 +27,7 @@ class Game {
 
         void InitInternal(const std::string& windowName, unsigned newWidth, unsigned newHeight);
         void RunInternal();
+        TTF_Font* gameFont;
 
     public:
         // functions
@@ -42,5 +44,6 @@ class Game {
 
         static SDL_Rect Vectors2ToSdlRect(const Vector2& positionVector, const Vector2& scaleVector);
         static SDL_FRect Vectors2ToSdlFRect(const Vector2& positionVector, const Vector2& scaleVector);
+        static TTF_Font* GetGameFont() { return GetInstance().gameFont; };
 
 };

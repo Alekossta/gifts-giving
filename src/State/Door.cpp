@@ -45,7 +45,6 @@ void Door::Begin()
             Button* button = dynamic_cast<Button*>(object);
             if (button->getOpensDoorCode() == doorCode) {
                 interactingButtons.push_back(button);
-                std::cout << "Adding button " << button->name << "to door " << doorCode << std::endl;
             }
         }
     }

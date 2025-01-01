@@ -3,7 +3,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Iinclude
 
 # Libraries
-LIBS = -lSDL2 -lSDL2_image -lm
+LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lm
 
 # Folders
 SRC_DIR = src

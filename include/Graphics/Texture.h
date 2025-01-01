@@ -8,7 +8,7 @@ class Texture
         SDL_Texture* texture;
         std::string src;
     public:
-        Texture(const std::string& newSrc);
+        Texture(SDL_Texture* texture, const std::string& newSrc);
         ~Texture();
         SDL_Texture* GetTexture() const {return texture;};
 };

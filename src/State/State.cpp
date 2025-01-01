@@ -7,6 +7,7 @@
 #include "State/Button.h"
 #include "State/Door.h"
 #include "State/Child.h"
+#include "UI/TextBox.h"
 #include <algorithm>
 
 bool elementOf(std::vector<std::string> &vec, std::string element) {
@@ -161,6 +162,10 @@ void State::InitInternal()
     }
   }
 
+  Vector2 position(100, 100);
+  // Size is irrelevant -> it will be calculated in Graphics.Init() based on the font
+  TextBox* Text1 = new TextBox("text", position, {}, 2, "EXAMPLE TEXT", Game::GetGameFont());
+  AddObjectToAll(Text1);
   for (const auto &pair : allObjects)
   {
     pair.second->Begin();
