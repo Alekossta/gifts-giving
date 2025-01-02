@@ -161,6 +161,9 @@ void State::InitInternal()
     }
   }
 
+  lives = 3;
+  score = 0;
+
   Vector2 positionLivesText(25, 25);
   livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3", Game::GetGameFont());
   AddObjectToAll(livesText);

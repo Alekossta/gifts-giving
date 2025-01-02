@@ -1,14 +1,21 @@
 #include "State/TextBox.h"
 #include "Game.h"
+#include "Graphics/Graphics.h"
+#include "Graphics/Text.h"
 
 TextBox::TextBox(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,
-int zIndexNew, const std::string &text , bool bIsVisibleNew=true, float rotation = 0.0)
+int zIndexNew, const std::string &text , bool bIsVisibleNew, float rotation)
 : Object(newName, startingPosition, startingSize, "", {}, {}, zIndexNew, 
 false, false, bIsVisibleNew, rotation),text(text){
 
 }
 
-void setText(const std::string& newText)
+void TextBox::setText(const std::string& newText)
 {
-    Graphics::
+    Text* text = dynamic_cast<Text*>(Graphics::GetSprites()[name]);
+    if(text)
+    {
+        SDL_Color defaultColor {0,0,0};
+        text->RegenerateTexture(defaultColor, newText);
+    }
 }

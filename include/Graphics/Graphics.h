@@ -33,6 +33,7 @@ class Graphics {
     public:
         static Graphics& GetInstance();
         static SDL_Renderer* GetRenderer();
+        static std::map<std::string,Sprite*>& GetSprites() {return GetInstance().sprites;};
         static void Render();
         static void Init(const std::string& windowName, unsigned width, unsigned height);
 };

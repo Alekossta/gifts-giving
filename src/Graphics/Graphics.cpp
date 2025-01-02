@@ -4,10 +4,12 @@
 #include "Graphics/Texture.h"
 #include "State/State.h"
 #include "State/TextBox.h"
+#include "Graphics/Text.h"
 #include <algorithm>
 #include <iostream>
 #include <vector>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 Graphics &Graphics::GetInstance() {
   // Avoid global declaration of instance before first call of getInstance
@@ -41,34 +43,30 @@ void Graphics::InitInternal(const std::string &windowName, unsigned width,unsign
     TextBox* text = dynamic_cast<TextBox*>(object);    
     if (text) 
     {
-        // Text sprites do not have an src rectangle or an image related to them
-        // like regualar sprites. That's why their textures are created separately
-        SDL_Surface* textSurface = TTF_RenderText_Solid(Game::GetGameFont(), text->getText().c_str(), {0, 0, 0});
 
-        // Create texture from surface
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, textSurface);
-        SDL_FreeSurface(textSurface);
-
-        // Calculate text size
-        int w, h;
-        TTF_SizeText(Game::GetGameFont(), text->getText().c_str(), &w, &h);
-        object->size = Vector2(w, h);
-
-        Sprite* newSprite = new Text(name, texture, object->zIndex);
-        sprites[name] = newSprite;
+      SDL_Color defaultColor {0,0,0};
+      Sprite* newSprite = new Text(name, text->getText(), defaultColor, 3);
+      sprites[name] = newSprite;
     } 
     else // is normal object
     {
         auto foundTexturePair = textures.find(object->srcName);
         Texture* spriteTexture = NULL;
-        if (foundTexturePair ==
-            textures.end()) // this means the texture does not exist
+        if (foundTexturePair == textures.end()) // this means the texture does not exist
         {
-          std::cout << "Creating new texture for source: " << object->srcName
-                    << std::endl;
-          spriteTexture = new Texture(NULL, object->srcName);
-          textures[object->srcName] = spriteTexture; // add new texture to map
-        } else {
+          SDL_Surface* tempSurface = IMG_Load(object->srcName.c_str());
+          if(!tempSurface)
+          {
+              std::cout << "Error opening image: " << object->srcName.c_str() << std::endl;
+          }
+          SDL_Texture* sdlTexture = SDL_CreateTextureFromSurface(Graphics::GetRenderer(), tempSurface);
+          SDL_FreeSurface(tempSurface);
+
+          spriteTexture = new Texture(sdlTexture, object->srcName);
+          textures[object->srcName] = spriteTexture;
+        } 
+        else
+        {
           spriteTexture = textures[object->srcName];
         }
 

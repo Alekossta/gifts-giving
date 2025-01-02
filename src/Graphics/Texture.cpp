@@ -2,19 +2,9 @@
 #include "Graphics/Graphics.h"
 #include "SDL2/SDL_image.h"
 
-Texture::Texture(SDL_Texture* newTexture, const std::string& newSrc) : src(newSrc)
+Texture::Texture(SDL_Texture* newTexture, const std::string& newSrc) : src(newSrc), texture(newTexture)
 {   
-    if (newTexture == NULL) {
-        SDL_Surface* tempSurface = IMG_Load(newSrc.c_str());
-        if(!tempSurface)
-        {
-            std::cout << "Error opening image: " << newSrc << std::endl;
-        }
-        texture = SDL_CreateTextureFromSurface(Graphics::GetRenderer(), tempSurface);
-        SDL_FreeSurface(tempSurface);
-    } else {
-        texture = newTexture;
-    }
+
 }
 
 void Texture::Destroy()
