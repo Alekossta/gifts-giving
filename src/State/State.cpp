@@ -153,10 +153,12 @@ void State::InitInternal()
         srcRectangleSize = Vector2(16, 24);
         zIndex = 1;
         std::string tileName = "Child" + std::to_string(x) + std::to_string(y);
+        TextBox* textBox = new TextBox(tileName + "textBox", tilePosition + (Vector2){50, -50}, {}, 2, "I want a bike", false);
         Child* Child1 = new Child(
             tileName, tilePosition, tileSize,
-            src, srcRectangle, srcRectangleSize, zIndex);
+            src, srcRectangle, srcRectangleSize, zIndex, textBox);
         AddObjectToAll(Child1);
+        AddObjectToAll(textBox);
       }
     }
   }

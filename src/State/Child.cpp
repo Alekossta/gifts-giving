@@ -4,10 +4,10 @@
 
 Child::Child(const std::string& childName, Vector2 position, Vector2 startingSize, 
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-int zIndexNew):
+int zIndexNew, TextBox* textBox):
  Object(childName, position, startingSize, newSrcName, newSourceRectanglePosition,
 newSourceRectangleSize, zIndexNew, false, true, true),
- bIsActive(false)
+ bIsActive(false), textBox(textBox)
 {
 
 }
@@ -23,10 +23,17 @@ void Child::Update(float deltatime)
 	const float distanceThreshold = 100;
 
 	bool bothPlayersClose = distanceFromPlayerFemale <= distanceThreshold && distanceFromPlayerMale <= distanceThreshold;
+	
+	if (bothPlayersClose) 
+	{
+		textBox->bIsVisible = true;
+	} else {
+		textBox->bIsVisible = false;
+	}
 
 	if(Input::IsKeyPressed(SDL_SCANCODE_SPACE) && Input::IsKeyPressed(SDL_SCANCODE_RETURN) && bothPlayersClose)
 	{
-		std::cout << "give gift" << std::endl;
+		std::cout << "give gift\n";	
 	}
 }
 
