@@ -154,8 +154,8 @@ void State::InitInternal()
         zIndex = 1;
         std::string tileName = "Child" + std::to_string(x) + std::to_string(y);
         
-        Object* textBackground = new Object(tileName + "textBoxBackground", tilePosition + (Vector2){50, -50}, {64, 32}, src, {19*32, 0}, {64, 32}, 1, false);
-        TextBox* textBox = new TextBox(tileName + "textBox", tilePosition + (Vector2){50, -50}, {}, 2, "I want a bike", textBackground, false);
+        Object* textBackground = new Object(tileName + "textBoxBackground", tilePosition + (Vector2){25, -80}, {2*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
+        TextBox* textBox = new TextBox(tileName + "textBox", tilePosition + (Vector2){50, -55}, {}, 4, "I want a bike", textBackground, false);
         Child* Child1 = new Child(
             tileName, tilePosition, tileSize,
             src, srcRectangle, srcRectangleSize, zIndex, textBox);
