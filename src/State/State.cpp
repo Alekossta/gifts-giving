@@ -153,12 +153,15 @@ void State::InitInternal()
         srcRectangleSize = Vector2(16, 24);
         zIndex = 1;
         std::string tileName = "Child" + std::to_string(x) + std::to_string(y);
-        TextBox* textBox = new TextBox(tileName + "textBox", tilePosition + (Vector2){50, -50}, {}, 2, "I want a bike", false);
+        
+        Object* textBackground = new Object(tileName + "textBoxBackground", tilePosition + (Vector2){50, -50}, {64, 32}, src, {19*32, 0}, {64, 32}, 1, false);
+        TextBox* textBox = new TextBox(tileName + "textBox", tilePosition + (Vector2){50, -50}, {}, 2, "I want a bike", textBackground, false);
         Child* Child1 = new Child(
             tileName, tilePosition, tileSize,
             src, srcRectangle, srcRectangleSize, zIndex, textBox);
         AddObjectToAll(Child1);
         AddObjectToAll(textBox);
+        AddObjectToAll(textBackground);
       }
     }
   }
@@ -167,11 +170,11 @@ void State::InitInternal()
   score = 0;
 
   Vector2 positionLivesText(25, 25);
-  livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3", Game::GetGameFont());
+  livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3", NULL, Game::GetGameFont());
   AddObjectToAll(livesText);
 
   Vector2 positionScoreText(Game::GetWidth() - 25, 25);
-  scoreText = new TextBox("ScoreText", positionScoreText, {}, 2, "1", Game::GetGameFont());
+  scoreText = new TextBox("ScoreText", positionScoreText, {}, 2, "1", NULL, Game::GetGameFont());
   AddObjectToAll(scoreText);
 
   // call begin for all objects

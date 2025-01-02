@@ -26,9 +26,9 @@ void Child::Update(float deltatime)
 	
 	if (bothPlayersClose) 
 	{
-		textBox->bIsVisible = true;
+		textBox->setBIsVisible(true);
 	} else {
-		textBox->bIsVisible = false;
+		textBox->setBIsVisible(false);
 	}
 
 	if(Input::IsKeyPressed(SDL_SCANCODE_SPACE) && Input::IsKeyPressed(SDL_SCANCODE_RETURN) && bothPlayersClose)

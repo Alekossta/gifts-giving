@@ -4,7 +4,7 @@
 #include "Graphics/Sprite.h"
 
 class Text : public Sprite
-{
+{      
     public:
         // courent text
         std::string currentText;

@@ -21,6 +21,7 @@ void Text::Render(const SDL_Rect* sourceRectangle,
     TTF_SizeText(Game::GetGameFont(), currentText.c_str(), &w, &h);
     destinationRectangle->w = w;
     destinationRectangle->h = h;
+
     SDL_RenderCopyExF(Graphics::GetRenderer(), texture->GetTexture(), NULL, destinationRectangle, angle, center, flip);    
 }
 
@@ -30,13 +31,9 @@ void Text::RegenerateTexture(const SDL_Color& newColor, const std::string& newTe
     SDL_Surface* surface = TTF_RenderText_Solid(Game::GetGameFont(), currentText.c_str(), newColor);
     if(texture)
     {
-        delete texture;
-        texture = new Texture(SDL_CreateTextureFromSurface(Graphics::GetRenderer(), surface), "TextTexture");
+        delete texture;  
     }
-    else
-    {
-        texture = new Texture(SDL_CreateTextureFromSurface(Graphics::GetRenderer(), surface), "TextTexture");
-    }
+    texture = new Texture(SDL_CreateTextureFromSurface(Graphics::GetRenderer(), surface), "TextTexture");
     SDL_FreeSurface(surface);
 }
 
