@@ -18,7 +18,4 @@ class Child : public Object
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
         virtual void OnOverlap(Object* overlappingObject) override {};
-
-        void AskGift();
-        void DontAskGift();
 };

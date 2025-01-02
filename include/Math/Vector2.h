@@ -11,6 +11,7 @@ class Vector2
         Vector2(float newX, float newY);
         float GetMagnitude() const;
         void Normalize();
+        float DistanceTo(const Vector2& otherVector);
 
         // Operator overloads
         Vector2 operator+(const Vector2& other) const;

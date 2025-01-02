@@ -27,12 +27,6 @@ void Input::ListenInternal()
                 break;
         }
     }
-
-    const Uint8* keyboardState = SDL_GetKeyboardState(0);
-    if(keyboardState[SDL_SCANCODE_SPACE] == 1)
-    {
-        printf("Space is pressed\n");
-    }
 }
 
 void Input::Init()

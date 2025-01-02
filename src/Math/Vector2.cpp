@@ -41,6 +41,13 @@ void Vector2::Normalize()
     }
 }
 
+float Vector2::DistanceTo(const Vector2& otherVector)
+{
+    float dx = x - otherVector.x;
+    float dy = y - otherVector.y;
+    return std::sqrt(dx*dx + dy*dy);
+}
+
 Vector2 Vector2::operator+(const Vector2& other) const
 {
     return Vector2(x + other.x, y + other.y);

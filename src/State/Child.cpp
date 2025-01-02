@@ -14,31 +14,21 @@ newSourceRectangleSize, zIndexNew, false, true, true),
 
 void Child::Update(float deltatime)
 {
-	Object* player1 = State::GetAllObjects()["Santa Male"];
-	bool bIsCloseToPlayer1 = State::AreObjectsClose(this, player1);
+	Object* santaMale = State::GetAllObjects()["Santa Male"];
+	Object* santaFemale = State::GetAllObjects()["Santa Female"];
 
-	Object* player2 = State::GetAllObjects()["Santa Female"];
-	bool bIsCloseToPlayer2 = State::AreObjectsClose(this, player2);
+	float distanceFromPlayerMale = santaMale->position.DistanceTo(position);
+	float distanceFromPlayerFemale = santaFemale->position.DistanceTo(position);
 
-	if(bIsCloseToPlayer1 && bIsCloseToPlayer2)
+	const float distanceThreshold = 100;
+
+	bool bothPlayersClose = distanceFromPlayerFemale <= distanceThreshold && distanceFromPlayerMale <= distanceThreshold;
+
+	if(Input::IsKeyPressed(SDL_SCANCODE_SPACE) && Input::IsKeyPressed(SDL_SCANCODE_RETURN) && bothPlayersClose)
 	{
-		AskGift();
-	}
-	else
-	{
-		DontAskGift();
+		std::cout << "give gift" << std::endl;
 	}
 }
-
-void Child::AskGift() {
-
-}
-
-
-void Child::DontAskGift() {
-
-}
-
 
 void Child::Begin() 
 {
