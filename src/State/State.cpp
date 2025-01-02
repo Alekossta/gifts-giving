@@ -159,10 +159,10 @@ void State::InitInternal()
         AddObjectToAll(Door1);
       } else if (currentLevel->grid[y][x][0] == 'K') {
         tilePosition = Vector2(xOffset, yOffset);
-        tileSize = Vector2(32, 48);
+        tileSize = Vector2(40, 48);
         bCollides = true;
-        srcRectangle = Vector2(16*32 + 8, 8);
-        srcRectangleSize = Vector2(16, 24);
+        srcRectangle = Vector2(16*32 + 6, 8 + 32 * (rand() % 4));
+        srcRectangleSize = Vector2(20, 24);
         zIndex = 1;
         std::string tileName = "Child" + std::to_string(x) + std::to_string(y);
         
