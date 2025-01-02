@@ -7,6 +7,7 @@ class Player : public Object
     private:
         unsigned playerIndex;
         float playerSpeed;
+        Vector2 startingSourceRectanglePosition;
         void CheckButtonCollision();
     public:
         Player(const std::string& playerName, Vector2 startingPosition, Vector2 startingSize,

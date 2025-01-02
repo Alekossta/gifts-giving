@@ -19,7 +19,7 @@ Player::~Player()
 
 void Player::Begin()
 {
-
+    startingSourceRectanglePosition = sourceRectanglePosition;
 }
 
 void Player::Update(float deltatime)
@@ -50,6 +50,14 @@ void Player::Update(float deltatime)
         movementDirection.y = -1;
     }
 
+    if(movementDirection.GetMagnitude() == 0) // we are not moving
+    {
+        sourceRectanglePosition = Vector2(startingSourceRectanglePosition.x, 0);
+    }
+    else
+    {
+        sourceRectanglePosition.y = 32 + 32 * ((SDL_GetTicks() / 100) % 2);
+    }
     
     movementDirection.Normalize();
     
