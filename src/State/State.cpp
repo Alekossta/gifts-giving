@@ -59,6 +59,18 @@ void State::InitInternal()
   wallCodes.push_back("T30");
   wallCodes.push_back("T40");
 
+  gifts.push_back(" a bike!");
+  gifts.push_back(" a dall!");
+  gifts.push_back(" a ball!");
+  gifts.push_back(" a plane!");
+  gifts.push_back(" a car!");
+  gifts.push_back(" a kite!");
+  gifts.push_back(" a yo-yo!");
+  gifts.push_back(" a dog!");
+  gifts.push_back(" a cat!");
+  gifts.push_back(" a fish!");
+  srand(time(NULL));
+
   for (int y = 0; y < NUM_OF_TILES_COL; y++)
   {
     for (int x = 0; x < NUM_OF_TILES_ROW; x++)
@@ -155,7 +167,7 @@ void State::InitInternal()
         std::string tileName = "Child" + std::to_string(x) + std::to_string(y);
         
         Object* textBackground = new Object(tileName + "textBoxBackground", tilePosition + (Vector2){25, -80}, {2*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
-        TextBox* textBox = new TextBox(tileName + "textBox", tilePosition + (Vector2){50, -55}, {}, 4, "I want a bike", textBackground, false);
+        TextBox* textBox = new TextBox(tileName + "textBox", tilePosition + (Vector2){50, -55}, {}, 4, "I want " + gifts[rand() % gifts.size()], textBackground, false);
         Child* Child1 = new Child(
             tileName, tilePosition, tileSize,
             src, srcRectangle, srcRectangleSize, zIndex, textBox);

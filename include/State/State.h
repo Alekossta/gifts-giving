@@ -30,6 +30,8 @@ class State {
 
         TextBox* livesText = NULL;
         TextBox* scoreText = NULL;
+
+        std::vector<std::string> gifts;
     public:
         static State& GetInstance();
         static void Update(float deltatime);
