@@ -9,7 +9,7 @@
 class TextBox : public Object {
 private:
     std::string text;
-    Object* textBackground;
+    
 public:
     TextBox(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,
          int zIndexNew, const std::string &text , Object* textBackground, bool bIsVisibleNew=true, float rotation = 0.0);
@@ -22,4 +22,5 @@ public:
             textBackground->bIsVisible = newBIsVisible; 
         }
     };
+    Object* textBackground;
 };

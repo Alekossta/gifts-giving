@@ -39,4 +39,5 @@ class Graphics {
         static void Init(const std::string& windowName, unsigned width, unsigned height);
         void createTextSprite(const std::string& name, TextBox* text);
         void createSprite(const std::string& name, Object* object);
+        void removeSprite(const std::string& name) { sprites.erase(sprites.find(name)); };
 };

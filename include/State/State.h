@@ -7,6 +7,7 @@
 #include "State/TextBox.h"
 #include "LevelManager/Level.h"
 #include "State/Child.h"
+#include <set>
 
 class Game;
 
@@ -36,7 +37,7 @@ class State {
 
         std::vector<std::string> gifts;
 
-        std::vector<Child*> activeChildren;
+        std::set<Child*> activeChildren;
         int goalNumOfActiveChildren;
         int initSecondsToGiveGift;
 
@@ -51,4 +52,5 @@ class State {
         static bool AreObjectsClose(Object* object1, Object* object2);
         std::map<std::string, int> tileCodeToTextureIndex;
         std::vector<std::string> wallCodes;
+        void RemoveChild(Child* child);
 };

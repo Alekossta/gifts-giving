@@ -73,7 +73,7 @@ void State::InitInternal()
   srand(time(NULL));
 
   goalNumOfActiveChildren = 3;
-  initSecondsToGiveGift = 20;
+  initSecondsToGiveGift = 3;
 
   for (int y = 0; y < NUM_OF_TILES_COL; y++)
   {
@@ -206,23 +206,8 @@ bool State::isPositionValid(Object* object) {
   return true;
 }
 
-static Uint32 TimerCallback(Uint32 interval, void* param) {
-    // Cast param to TimerHandler pointer
-    TimerHandler* handler = static_cast<TimerHandler*>(param);
-
-    if (handler->secondsLeft > 0) {
-        handler->secondsLeft--;
-        std::cout << "Seconds left: " << handler->secondsLeft << std::endl;
-    } else {
-        std::cout << "Timer finished!" << std::endl;
-        return 0; // Stop the timer
-    }
-
-    return interval; // Continue the timer
-}
-
 void State::CreateChild() {
-    std::string tileName = "Child" + std::to_string(activeChildren.size());
+    std::string tileName = "Child" + std::to_string(rand() % (10000000));
     Vector2 position = {};
     Vector2 tileSize = Vector2(40, 48);
     bool bCollides = true;
@@ -251,7 +236,7 @@ void State::CreateChild() {
     AddObjectToAll(textBox);
     AddObjectToAll(textBackground);
     AddObjectToAll(timeTextBox);
-    activeChildren.push_back(child);
+    activeChildren.insert(child);
 
     Graphics::GetInstance().createSprite(tileName, child);
     Graphics::GetInstance().createTextSprite(tileName + "textBox", textBox);
@@ -259,14 +244,31 @@ void State::CreateChild() {
     Graphics::GetInstance().createSprite(tileName + "textBoxBackground", textBackground);
 }
 
+void State::RemoveChild(Child* child) {
+    child->textBox->textBackground = NULL;
+    child->textBox = NULL;
+    child->timeTextBox = NULL;
+    allObjects[child->name] = NULL;
+    activeChildren.erase(child);
+    Graphics::GetInstance().removeSprite(child->name);
+}
+
 void State::UpdateInternal(float deltatime)
 {
   while (activeChildren.size() < goalNumOfActiveChildren) {
     CreateChild();
   }
-  for (const auto &pair : allObjects)
-  {
-    pair.second->Update(deltatime);
+  for (auto it = allObjects.begin(); it != allObjects.end(); ) {
+    if (it->second == NULL) {
+      it = allObjects.erase(it); 
+    } else {
+      it->second->Update(deltatime);
+      if (it->second == NULL) {
+        it = allObjects.erase(it); 
+      } else {
+        ++it;
+      }
+    }
   }
   if(livesText) livesText->setText(std::to_string(lives));
   if(scoreText) scoreText->setText(std::to_string(score));

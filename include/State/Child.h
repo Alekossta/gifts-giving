@@ -10,10 +10,12 @@ class Child : public Object
     private:
         bool bIsActive;
         int opensDoorCode;
-        TextBox* textBox;
-        TimerHandler timerHandler;
-        TextBox* timeTextBox;
+        TimerHandler timeToGiveGift;
+        TimerHandler timeToDisappear;
+        bool bAsksGift;
+
     public:
+
         Child(const std::string& childName, Vector2 position, Vector2 startingSize, 
             const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
             int zIndexNew, TextBox* textBox, TextBox* timeTexBox, int secondsLeft);
@@ -23,4 +25,6 @@ class Child : public Object
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
         virtual void OnOverlap(Object* overlappingObject) override {};
+        TextBox* textBox;
+        TextBox* timeTextBox;
 };
