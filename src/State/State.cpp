@@ -205,6 +205,22 @@ bool State::isPositionValid(Object* object) {
 
   return true;
 }
+
+static Uint32 TimerCallback(Uint32 interval, void* param) {
+    // Cast param to TimerHandler pointer
+    TimerHandler* handler = static_cast<TimerHandler*>(param);
+
+    if (handler->secondsLeft > 0) {
+        handler->secondsLeft--;
+        std::cout << "Seconds left: " << handler->secondsLeft << std::endl;
+    } else {
+        std::cout << "Timer finished!" << std::endl;
+        return 0; // Stop the timer
+    }
+
+    return interval; // Continue the timer
+}
+
 void State::CreateChild() {
     std::string tileName = "Child" + std::to_string(activeChildren.size());
     Vector2 position = {};
@@ -225,7 +241,9 @@ void State::CreateChild() {
     Object* textBackground = new Object(tileName + "textBoxBackground", position + (Vector2){25, -80}, {2*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
     TextBox* textBox = new TextBox(tileName + "textBox", position + (Vector2){50, -55}, {}, 4, "I want " + gifts[rand() % gifts.size()], textBackground, true);
 
-    TextBox* timeTextBox = new TextBox(tileName + "timeTextBox", position + (Vector2){0, -60}, {}, 2, "", NULL);
+    TextBox* timeTextBox = new TextBox(tileName + "timeTextBox", position + (Vector2){8, -35}, {}, 2, "", NULL);
+
+
     Child* child = new Child(
         tileName, position, tileSize,
         src, srcRectangle, srcRectangleSize, zIndex, textBox, timeTextBox, initSecondsToGiveGift);

@@ -3,6 +3,7 @@
 #include "Input/Input.h"
 #include "State/Child.h"
 #include "State/TextBox.h"
+#include "TimerHandler.h"
 
 class Child : public Object
 {  
@@ -10,12 +11,12 @@ class Child : public Object
         bool bIsActive;
         int opensDoorCode;
         TextBox* textBox;
-        int secondsToGiveGift;
+        TimerHandler timerHandler;
         TextBox* timeTextBox;
     public:
         Child(const std::string& childName, Vector2 position, Vector2 startingSize, 
             const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-            int zIndexNew, TextBox* textBox, TextBox* timeTexBox, int secondsToGiveGift);
+            int zIndexNew, TextBox* textBox, TextBox* timeTexBox, int secondsLeft);
         ~Child(){};
         bool getIsActive() const { return bIsActive; };
         bool getOpensDoorCode() const { return opensDoorCode; };

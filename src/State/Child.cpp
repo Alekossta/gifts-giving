@@ -4,12 +4,12 @@
 
 Child::Child(const std::string& childName, Vector2 position, Vector2 startingSize, 
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-int zIndexNew, TextBox* textBox, TextBox* timeTextBox, int secondsToGiveGift):
+int zIndexNew, TextBox* textBox, TextBox* timeTextBox, int secondsLeft):
  Object(childName, position, startingSize, newSrcName, newSourceRectanglePosition,
 newSourceRectangleSize, zIndexNew, false, true, true),
- bIsActive(false), textBox(textBox), timeTextBox(timeTextBox), secondsToGiveGift(secondsToGiveGift)
+ bIsActive(false), textBox(textBox), timeTextBox(timeTextBox), timerHandler(secondsLeft)
 {
-
+	timerHandler.startTimer(1000);
 }
 
 void Child::Update(float deltatime)
@@ -35,6 +35,13 @@ void Child::Update(float deltatime)
 	{
 		std::cout << "give gift\n";	
 	}
+	
+	int seconds = timerHandler.secondsLeft;
+	timeTextBox->setText(std::to_string(seconds));
+	if (timerHandler.secondsLeft == 0) {
+		std::cout << "child dies\n";
+	}
+	
 }
 
 void Child::Begin() 
