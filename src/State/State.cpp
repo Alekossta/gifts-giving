@@ -245,12 +245,16 @@ void State::CreateChild() {
 }
 
 void State::RemoveChild(Child* child) {
+    std::string name = child->name;
     child->textBox->textBackground = NULL;
     child->textBox = NULL;
     child->timeTextBox = NULL;
-    allObjects[child->name] = NULL;
+    allObjects[name] = NULL;
     activeChildren.erase(child);
-    Graphics::GetInstance().removeSprite(child->name);
+    Graphics::GetInstance().removeSprite(name);
+    Graphics::GetInstance().removeSprite(name + "timeTextBox");
+    Graphics::GetInstance().removeSprite(name + "textBoxBackground");
+    Graphics::GetInstance().removeSprite(name + "textBox");
 }
 
 void State::UpdateInternal(float deltatime)
