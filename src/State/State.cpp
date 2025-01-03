@@ -7,6 +7,7 @@
 #include "State/Button.h"
 #include "State/Door.h"
 #include "State/Child.h"
+#include "Graphics/Graphics.h"
 #include <algorithm>
 
 bool elementOf(std::vector<std::string> &vec, std::string element) {
@@ -71,6 +72,9 @@ void State::InitInternal()
   gifts.push_back(" a fish!");
   srand(time(NULL));
 
+  goalNumOfActiveChildren = 3;
+  initSecondsToGiveGift = 20;
+
   for (int y = 0; y < NUM_OF_TILES_COL; y++)
   {
     for (int x = 0; x < NUM_OF_TILES_ROW; x++)
@@ -93,7 +97,7 @@ void State::InitInternal()
             tileName, tilePosition, tileSize,
             src, srcRectangle, srcRectangleSize, zIndex, bCollides);
       AddObjectToAll(GroundTileMap);
-
+      bool isNoWallPosition = true;
       if (currentLevel->grid[y][x] == "MA0")
       {
         tileSize = Vector2(64, 64);
@@ -121,6 +125,7 @@ void State::InitInternal()
         SantaFemale->Tags.push_back("Player");
         SantaFemale->CollisionIgnoreTags.push_back("Player");
         AddObjectToAll(SantaFemale);
+        noWallPositions.push_back(tilePosition);
       }
       else if (elementOf(wallCodes, currentLevel->grid[y][x])) {
         std::string tileName = "Wall" + std::to_string(x) + std::to_string(y);
@@ -132,6 +137,7 @@ void State::InitInternal()
             tileName, tilePosition, tileSize,
            src, srcRectangle, srcRectangleSize, zIndex);
         AddObjectToAll(Wall);
+        isNoWallPosition = false;
       } else if (currentLevel->grid[y][x][0] == 'B' && currentLevel->grid[y][x] != "BT0") {
         int opensDoorCode = (currentLevel->grid[y][x][1] - '0');
         tilePosition = Vector2(xOffset, yOffset);
@@ -144,6 +150,7 @@ void State::InitInternal()
             tileName, tilePosition, tileSize,
             src, srcRectangle, srcRectangleSize, zIndex, opensDoorCode);
         AddObjectToAll(Button1);
+        isNoWallPosition = false;
       } else if (currentLevel->grid[y][x][0] == 'D') {
         int doorCode = (currentLevel->grid[y][x][1] - '0');
         bool bIsVertical = (currentLevel->grid[y][x][2] == 'V');
@@ -157,23 +164,11 @@ void State::InitInternal()
             tileName, tilePosition, tileSize,
             src, srcRectangle, srcRectangleSize, zIndex, doorCode, bIsVertical);
         AddObjectToAll(Door1);
-      } else if (currentLevel->grid[y][x][0] == 'K') {
-        tilePosition = Vector2(xOffset, yOffset);
-        tileSize = Vector2(40, 48);
-        bCollides = true;
-        srcRectangle = Vector2(16*32 + 6, 8 + 32 * (rand() % 4));
-        srcRectangleSize = Vector2(20, 24);
-        zIndex = 1;
-        std::string tileName = "Child" + std::to_string(x) + std::to_string(y);
-        
-        Object* textBackground = new Object(tileName + "textBoxBackground", tilePosition + (Vector2){25, -80}, {2*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
-        TextBox* textBox = new TextBox(tileName + "textBox", tilePosition + (Vector2){50, -55}, {}, 4, "I want " + gifts[rand() % gifts.size()], textBackground, false);
-        Child* Child1 = new Child(
-            tileName, tilePosition, tileSize,
-            src, srcRectangle, srcRectangleSize, zIndex, textBox);
-        AddObjectToAll(Child1);
-        AddObjectToAll(textBox);
-        AddObjectToAll(textBackground);
+        isNoWallPosition = false;
+      }
+
+      if (isNoWallPosition) {
+        noWallPositions.push_back(tilePosition);
       }
     }
   }
@@ -198,8 +193,59 @@ void State::InitInternal()
 
 void State::Init() { GetInstance().InitInternal(); }
 
+bool State::isPositionValid(Object* object) {
+  Object* player1 = GetAllObjects()["Santa Male"];
+  if (AreObjectsOverlapping(object, player1)) return false;
+  Object* player2 = GetAllObjects()["Santa Female"];
+  if (AreObjectsOverlapping(object, player2)) return false;
+
+  for (const auto &child : activeChildren) {
+    if (AreObjectsOverlapping(object, child)) return false;
+  }
+
+  return true;
+}
+void State::CreateChild() {
+    std::string tileName = "Child" + std::to_string(activeChildren.size());
+    Vector2 position = {};
+    Vector2 tileSize = Vector2(40, 48);
+    bool bCollides = true;
+    Vector2 srcRectangle = Vector2(16*32 + 6, 8 + 32 * (rand() % 4));
+    Vector2 srcRectangleSize = Vector2(20, 24);
+    int zIndex = 1;
+    std::string src = "./assets/Atlas.png";
+
+    Object* testerObject = new Object("testObject", {}, tileSize, src, srcRectangle, srcRectangleSize, zIndex);
+    do {
+      int size = noWallPositions.size();
+      position = testerObject->position = noWallPositions[rand() % size];
+    } while (!isPositionValid(testerObject));
+    delete testerObject;
+
+    Object* textBackground = new Object(tileName + "textBoxBackground", position + (Vector2){25, -80}, {2*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
+    TextBox* textBox = new TextBox(tileName + "textBox", position + (Vector2){50, -55}, {}, 4, "I want " + gifts[rand() % gifts.size()], textBackground, true);
+
+    TextBox* timeTextBox = new TextBox(tileName + "timeTextBox", position + (Vector2){0, -60}, {}, 2, "", NULL);
+    Child* child = new Child(
+        tileName, position, tileSize,
+        src, srcRectangle, srcRectangleSize, zIndex, textBox, timeTextBox, initSecondsToGiveGift);
+    AddObjectToAll(child);
+    AddObjectToAll(textBox);
+    AddObjectToAll(textBackground);
+    AddObjectToAll(timeTextBox);
+    activeChildren.push_back(child);
+
+    Graphics::GetInstance().createSprite(tileName, child);
+    Graphics::GetInstance().createTextSprite(tileName + "textBox", textBox);
+    Graphics::GetInstance().createTextSprite(tileName + "timeTextBox", timeTextBox);
+    Graphics::GetInstance().createSprite(tileName + "textBoxBackground", textBackground);
+}
+
 void State::UpdateInternal(float deltatime)
 {
+  while (activeChildren.size() < goalNumOfActiveChildren) {
+    CreateChild();
+  }
   for (const auto &pair : allObjects)
   {
     pair.second->Update(deltatime);

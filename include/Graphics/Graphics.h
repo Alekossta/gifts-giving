@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include "Sprite.h"
+#include "State/TextBox.h"
 
 class Game;
 
@@ -28,7 +29,7 @@ class Graphics {
         // Delete copy constructor and assignment operator to prevent duplicates
         Graphics(const Graphics&) = delete;
         Graphics& operator=(const Graphics&) = delete;
-
+        
         ~Graphics();
     public:
         static Graphics& GetInstance();
@@ -36,4 +37,6 @@ class Graphics {
         static std::map<std::string,Sprite*>& GetSprites() {return GetInstance().sprites;};
         static void Render();
         static void Init(const std::string& windowName, unsigned width, unsigned height);
+        void createTextSprite(const std::string& name, TextBox* text);
+        void createSprite(const std::string& name, Object* object);
 };

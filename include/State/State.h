@@ -6,6 +6,7 @@
 #include "Input/Input.h"
 #include "State/TextBox.h"
 #include "LevelManager/Level.h"
+#include "State/Child.h"
 
 class Game;
 
@@ -24,6 +25,8 @@ class State {
         std::map<std::string, Object*> allObjects;
         void MoveObjectInternal(Object* object, Vector2 newPosition);
         void AddObjectToAll(Object* objectToAdd);
+        void CreateChild();
+        bool isPositionValid(Object* object);
 
         unsigned int score;
         unsigned int lives;
@@ -32,6 +35,12 @@ class State {
         TextBox* scoreText = NULL;
 
         std::vector<std::string> gifts;
+
+        std::vector<Child*> activeChildren;
+        int goalNumOfActiveChildren;
+        int initSecondsToGiveGift;
+
+        std::vector<Vector2> noWallPositions;
     public:
         static State& GetInstance();
         static void Update(float deltatime);

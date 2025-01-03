@@ -24,6 +24,6 @@ class Object
         std::vector<std::string> Tags;
         std::vector<std::string> CollisionIgnoreTags;
         bool bIsVisible;
-        void setBIsVisible(bool bIsVisible) { this->bIsVisible = bIsVisible; };
+        virtual void setBIsVisible(bool bIsVisible) { this->bIsVisible = bIsVisible; };
         float rotation;
 };

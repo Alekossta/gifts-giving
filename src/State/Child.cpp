@@ -4,10 +4,10 @@
 
 Child::Child(const std::string& childName, Vector2 position, Vector2 startingSize, 
 const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-int zIndexNew, TextBox* textBox):
+int zIndexNew, TextBox* textBox, TextBox* timeTextBox, int secondsToGiveGift):
  Object(childName, position, startingSize, newSrcName, newSourceRectanglePosition,
 newSourceRectangleSize, zIndexNew, false, true, true),
- bIsActive(false), textBox(textBox)
+ bIsActive(false), textBox(textBox), timeTextBox(timeTextBox), secondsToGiveGift(secondsToGiveGift)
 {
 
 }

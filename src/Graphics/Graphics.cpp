@@ -17,6 +17,37 @@ Graphics &Graphics::GetInstance() {
   return instance;
 }
 
+void Graphics::createTextSprite(const std::string& name, TextBox* text) {
+    SDL_Color defaultColor {0,0,0};
+    Sprite* newSprite = new Text(name, text->getText(), defaultColor, 3);
+    sprites[name] = newSprite;
+}
+
+void Graphics::createSprite(const std::string& name, Object* object) {
+    auto foundTexturePair = textures.find(object->srcName);
+    Texture* spriteTexture = NULL;
+    if (foundTexturePair == textures.end()) // this means the texture does not exist
+    {
+      SDL_Surface* tempSurface = IMG_Load(object->srcName.c_str());
+      if(!tempSurface)
+      {
+          std::cout << "Error opening image: " << object->srcName.c_str() << std::endl;
+      }
+      SDL_Texture* sdlTexture = SDL_CreateTextureFromSurface(Graphics::GetRenderer(), tempSurface);
+      SDL_FreeSurface(tempSurface);
+
+      spriteTexture = new Texture(sdlTexture, object->srcName);
+      textures[object->srcName] = spriteTexture;
+    } 
+    else
+    {
+      spriteTexture = textures[object->srcName];
+    }
+
+    Sprite *newSprite = new Sprite(object->name, spriteTexture, object->zIndex);
+    sprites[name] = newSprite;
+}
+
 // Initialization
 void Graphics::InitInternal(const std::string &windowName, unsigned width,unsigned height) 
 {  
@@ -43,35 +74,11 @@ void Graphics::InitInternal(const std::string &windowName, unsigned width,unsign
     TextBox* text = dynamic_cast<TextBox*>(object);    
     if (text) 
     {
-
-      SDL_Color defaultColor {0,0,0};
-      Sprite* newSprite = new Text(name, text->getText(), defaultColor, 3);
-      sprites[name] = newSprite;
+        createTextSprite(name, text);
     } 
     else // is normal object
     {
-        auto foundTexturePair = textures.find(object->srcName);
-        Texture* spriteTexture = NULL;
-        if (foundTexturePair == textures.end()) // this means the texture does not exist
-        {
-          SDL_Surface* tempSurface = IMG_Load(object->srcName.c_str());
-          if(!tempSurface)
-          {
-              std::cout << "Error opening image: " << object->srcName.c_str() << std::endl;
-          }
-          SDL_Texture* sdlTexture = SDL_CreateTextureFromSurface(Graphics::GetRenderer(), tempSurface);
-          SDL_FreeSurface(tempSurface);
-
-          spriteTexture = new Texture(sdlTexture, object->srcName);
-          textures[object->srcName] = spriteTexture;
-        } 
-        else
-        {
-          spriteTexture = textures[object->srcName];
-        }
-
-        Sprite *newSprite = new Sprite(object->name, spriteTexture, object->zIndex);
-        sprites[name] = newSprite;
+        createSprite(name, object);
     }
   }
 }
