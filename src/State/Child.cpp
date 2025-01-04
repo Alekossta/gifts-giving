@@ -7,52 +7,38 @@ const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSo
 int zIndexNew, TextBox* textBox, TextBox* timeTextBox, int secondsLeft):
  Object(childName, position, startingSize, newSrcName, newSourceRectanglePosition,
 newSourceRectangleSize, zIndexNew, false, true, true),
- bAsksGift(false), textBox(textBox), timeTextBox(timeTextBox), timeToGiveGift(secondsLeft), timeToDisappear(2), bIsActive(true)
+ bAsksGift(false), textBox(textBox), timeTextBox(timeTextBox), timeToGiveGift(secondsLeft), timeToDisappear(2)
 {
 	timeToGiveGift.startTimer(1000);
 }
 
 void Child::Update(float deltatime)
 {	
-	if (bIsActive) {
-		Object* santaMale = State::GetAllObjects()["Santa Male"];
-		Object* santaFemale = State::GetAllObjects()["Santa Female"];
+	Object* santaMale = State::GetAllObjects()["Santa Male"];
+	Object* santaFemale = State::GetAllObjects()["Santa Female"];
 
-		float distanceFromPlayerMale = santaMale->position.DistanceTo(position);
-		float distanceFromPlayerFemale = santaFemale->position.DistanceTo(position);
+	float distanceFromPlayerMale = santaMale->position.DistanceTo(position);
+	float distanceFromPlayerFemale = santaFemale->position.DistanceTo(position);
 
-		const float distanceThreshold = 100;
+	const float distanceThreshold = 100;
 
-		bool bothPlayersClose = distanceFromPlayerFemale <= distanceThreshold && distanceFromPlayerMale <= distanceThreshold;
-		
-		if (bothPlayersClose) 
-		{
-			textBox->setIsVisible(true);
-		} else {
-			textBox->setIsVisible(false);
-		}
-		timeTextBox->setText(std::to_string(timeToGiveGift.secondsLeft));
-		if(Input::IsKeyPressed(SDL_SCANCODE_SPACE) && Input::IsKeyPressed(SDL_SCANCODE_RETURN) && bothPlayersClose)
-		{	
-			textBox->setText("Thank you!");
-			textBox->setIsVisible(true);
-			timeTextBox->bIsVisible = false;
-			bIsActive = false;
-			timeToDisappear.startTimer(1000);
-		} else {
-			if (timeToGiveGift.secondsLeft == 0) {
-				bIsActive = false;
-				timeTextBox->bIsVisible = false;
-				textBox->setText("):");
-				textBox->setIsVisible(true);
-				timeToDisappear.startTimer(1000);
-			}
-		}
+	bool bothPlayersClose = distanceFromPlayerFemale <= distanceThreshold && distanceFromPlayerMale <= distanceThreshold;
+	
+	if (bothPlayersClose) 
+	{
+		textHolder->setIsVisible(true);
 	} else {
-		if (timeToDisappear.secondsLeft == 0) {
-			textBox->setIsVisible(false);
-			State::GetInstance().RemoveChild(this);
-		}
+		textHolder->setIsVisible(false);
+	}
+
+	timeTextBox->setText(std::to_string(timeToGiveGift.secondsLeft));
+	if(Input::IsKeyPressed(SDL_SCANCODE_SPACE) && Input::IsKeyPressed(SDL_SCANCODE_RETURN) && bothPlayersClose)
+	{	
+		textBox->setText("Thank you!");
+		// textBox->setIsVisible(true);
+		// timeTextBox->bIsVisible = false;
+		// bIsActive = false;
+		timeToDisappear.startTimer(1000);
 	}
 }
 

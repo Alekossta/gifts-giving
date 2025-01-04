@@ -8,8 +8,6 @@
 class Child : public Object
 {  
     private:
-        bool bIsActive;
-        int opensDoorCode;
         TimerHandler timeToGiveGift;
         TimerHandler timeToDisappear;
         bool bAsksGift;
@@ -20,10 +18,9 @@ class Child : public Object
             const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
             int zIndexNew, TextBox* textBox, TextBox* timeTexBox, int secondsLeft);
         ~Child(){};
-        bool getIsActive() const { return bIsActive; };
-        bool getOpensDoorCode() const { return opensDoorCode; };
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
+        Object* textHolder;
         TextBox* textBox;
         TextBox* timeTextBox;
 };
