@@ -26,7 +26,7 @@ class State {
         std::map<std::string, Object*> allObjects;
         void MoveObjectInternal(Object* object, Vector2 newPosition);
         void AddObjectToAll(Object* objectToAdd);
-        void CreateChild();
+        void CreateChild(bool bStateOnly);
         bool isPositionValid(Object* object);
         void setupTileCodeToTextureIndex();
         void setupWallCodes();
@@ -43,6 +43,9 @@ class State {
         std::set<Child*> activeChildren;
         int goalNumOfActiveChildren;
         int initSecondsToGiveGift;
+
+        Uint32 kidsSpawnInterval = 15 * 1000; // start at 15 sec
+        Uint32 lastSpawnTime;
 
         std::vector<Vector2> noWallPositions;
     public:

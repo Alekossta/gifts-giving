@@ -83,6 +83,7 @@ void State::InitInternal()
   initSecondsToGiveGift = 25;
   lives = 3;
   score = 0;
+  lastSpawnTime = SDL_GetTicks();
 
   // init level manager and open level 0
   LevelManager::Init();
@@ -203,11 +204,16 @@ void State::InitInternal()
   scoreText = new TextBox("ScoreText", positionScoreText, {}, 2, "1", Game::GetGameFont());
   AddObjectToAll(scoreText);
 
+  // create a child for the start
+
   // call begin for all objects
   for (const auto &pair : allObjects)
   {
     pair.second->Begin();
   }
+
+  // create only on  state because graphics has not been initalized yet
+  CreateChild(true);
 }
 
 void State::Init() { GetInstance().InitInternal(); }
@@ -225,9 +231,9 @@ bool State::isPositionValid(Object* object) {
   return true;
 }
 
-void State::CreateChild() {
+void State::CreateChild(bool bStateOnly) {
     std::string tileName = "Child" + std::to_string(rand() % (10000000));
-    Vector2 position = {};
+    Vector2 position;
     Vector2 tileSize = Vector2(40, 48);
     bool bCollides = true;
     Vector2 srcRectangle = Vector2(16*32 + 6, 8 + 32 * (rand() % 4));
@@ -248,7 +254,7 @@ void State::CreateChild() {
 
     Child* child = new Child(
         tileName, position, tileSize,
-        src, srcRectangle, srcRectangleSize, zIndex, textBox, timeTextBox, initSecondsToGiveGift);
+        src, srcRectangle, srcRectangleSize, zIndex, textBackground, textBox, timeTextBox, initSecondsToGiveGift);
     AddObjectToAll(child);
     AddObjectToAll(textBox);
     AddObjectToAll(textBackground);
@@ -258,10 +264,13 @@ void State::CreateChild() {
     textBackground->children.push_back(textBox);
     activeChildren.insert(child);
 
-    Graphics::GetInstance().createSprite(tileName, child);
-    Graphics::GetInstance().createTextSprite(tileName + "textBox", textBox);
-    Graphics::GetInstance().createTextSprite(tileName + "timeTextBox", timeTextBox);
-    Graphics::GetInstance().createSprite(tileName + "textBoxBackground", textBackground);
+    if(!bStateOnly)
+    {
+      Graphics::GetInstance().createSprite(tileName, child);
+      Graphics::GetInstance().createTextSprite(tileName + "textBox", textBox);
+      Graphics::GetInstance().createTextSprite(tileName + "timeTextBox", timeTextBox);
+      Graphics::GetInstance().createSprite(tileName + "textBoxBackground", textBackground);
+    }
 }
 
 void State::RemoveChild(Child* child) {
@@ -279,6 +288,12 @@ void State::RemoveChild(Child* child) {
 
 void State::UpdateInternal(float deltatime)
 {
+  Uint32 currentTime = SDL_GetTicks();
+  if (currentTime - lastSpawnTime >= kidsSpawnInterval) {
+    // create also the sprite for the kid so true
+    CreateChild(false);
+    lastSpawnTime = currentTime;
+  }
   for(auto& objectPair : allObjects)
   {
     objectPair.second->Update(deltatime);

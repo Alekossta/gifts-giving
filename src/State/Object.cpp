@@ -30,6 +30,9 @@ void Object::setIsVisible(bool newbIsVisible)
     bIsVisible = newbIsVisible;
     for(Object* child : children)
     {
-        child->setIsVisible(newbIsVisible);
+        if(child)
+        {
+            child->setIsVisible(newbIsVisible);
+        }
     }
 }

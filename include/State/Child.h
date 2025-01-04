@@ -16,7 +16,7 @@ class Child : public Object
 
         Child(const std::string& childName, Vector2 position, Vector2 startingSize, 
             const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
-            int zIndexNew, TextBox* textBox, TextBox* timeTexBox, int secondsLeft);
+            int zIndexNew, Object* newTextHolder, TextBox* textBox, TextBox* timeTexBox, int secondsLeft);
         ~Child(){};
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
