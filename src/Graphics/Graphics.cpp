@@ -32,6 +32,7 @@ void Graphics::createSprite(const std::string& name, Object* object) {
       if(!tempSurface)
       {
           std::cout << "Error opening image: " << object->srcName.c_str() << std::endl;
+          std::cout << IMG_GetError() << std::endl;
       }
       SDL_Texture* sdlTexture = SDL_CreateTextureFromSurface(Graphics::GetRenderer(), tempSurface);
       SDL_FreeSurface(tempSurface);

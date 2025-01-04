@@ -41,6 +41,7 @@ class Game {
         static unsigned GetWidth() {return GetInstance().width;};
         static unsigned GetHeight() {return GetInstance().height;};
         static void Run() {GetInstance().RunInternal();};
+        static std::string GetAssetPath(const std::string& path);
 
         static SDL_Rect Vectors2ToSdlRect(const Vector2& positionVector, const Vector2& scaleVector);
         static SDL_FRect Vectors2ToSdlFRect(const Vector2& positionVector, const Vector2& scaleVector);

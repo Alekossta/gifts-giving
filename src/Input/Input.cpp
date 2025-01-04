@@ -1,6 +1,9 @@
 #include "Input/Input.h"
 #include <SDL2/SDL.h>
 #include "Game.h"
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 Input Input::instance;
 
@@ -18,6 +21,9 @@ void Input::ListenInternal()
         {
             case SDL_QUIT:
                 Game::SetIsRunning(false);
+                #ifdef __EMSCRIPTEN__
+                    emscripten_cancel_main_loop();
+                #endif
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 break;

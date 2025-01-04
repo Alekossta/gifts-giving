@@ -85,7 +85,7 @@ void State::InitInternal()
       Vector2 tileSize, srcRectangle, srcRectangleSize(32, 32);
       int zIndex;
       bool bCollides;
-      std::string src = "./assets/Atlas.png";
+      std::string src = Game::GetAssetPath("Atlas.png");
 
       // Draw Background Tile
       std::string tileName = "Tile" + std::to_string(x) + std::to_string(y);
@@ -214,7 +214,7 @@ void State::CreateChild() {
     Vector2 srcRectangle = Vector2(16*32 + 6, 8 + 32 * (rand() % 4));
     Vector2 srcRectangleSize = Vector2(20, 24);
     int zIndex = 1;
-    std::string src = "./assets/Atlas.png";
+    std::string src = Game::GetAssetPath("Atlas.png");
 
     Object* testerObject = new Object("testObject", {}, tileSize, src, srcRectangle, srcRectangleSize, zIndex);
     do {

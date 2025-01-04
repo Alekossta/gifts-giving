@@ -14,7 +14,7 @@ void Game::InitInternal(const std::string& windowName, unsigned newWidth, unsign
 
     SetIsRunning(true);
 
-    int result = SDL_Init(SDL_INIT_EVERYTHING);
+    int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     if(result < 0)
     {
         printf("Error in initialization of SDL subsystems: %s\n", SDL_GetError());
@@ -22,6 +22,15 @@ void Game::InitInternal(const std::string& windowName, unsigned newWidth, unsign
     Input::Init();
     State::Init();
     Graphics::Init(windowName, width, height);
+}
+
+std::string Game::GetAssetPath(const std::string& path)
+{
+    #ifdef __EMSCRIPTEN__
+        return "/assets/" + path; // Web
+    #else
+        return "./assets/" + path; // Local
+    #endif
 }
 
 void Game::RunInternal()
