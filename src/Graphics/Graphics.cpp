@@ -110,10 +110,11 @@ bool compareByZIndex(Sprite *a, Sprite *b) {
 
 void Graphics::RenderInternal() {
   SDL_RenderClear(renderer);
+
   std::vector<Sprite *> spriteVector;
   for (const auto &pair : sprites) {
 
-    if (State::GetAllObjects()[pair.first]->bIsVisible == false) {
+    if (State::GetAllObjects()[pair.first]->bIsVisible == false || (State::GetBDisplayIntro() && pair.first != "intro")) {
       continue;
     }
     spriteVector.push_back(pair.second);

@@ -32,6 +32,8 @@ class State {
         void setupWallCodes();
         void setupGifts();
 
+        bool bDisplayIntro;
+
         unsigned int score;
         unsigned int lives;
 
@@ -59,4 +61,5 @@ class State {
         std::map<std::string, int> tileCodeToTextureIndex;
         std::vector<std::string> wallCodes;
         void RemoveChild(Child* child);
+        static bool GetBDisplayIntro() { return GetInstance().bDisplayIntro; };
 };

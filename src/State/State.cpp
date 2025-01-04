@@ -214,6 +214,10 @@ void State::InitInternal()
 
   // create only on  state because graphics has not been initalized yet
   CreateChild(true);
+
+  TextBox* intro = new TextBox("intro", {60, 80}, {}, 2, "Welcome!", Game::GetGameFont());
+  AddObjectToAll(intro);
+  bDisplayIntro = true;
 }
 
 void State::Init() { GetInstance().InitInternal(); }
@@ -288,18 +292,24 @@ void State::RemoveChild(Child* child) {
 
 void State::UpdateInternal(float deltatime)
 {
-  Uint32 currentTime = SDL_GetTicks();
-  if (currentTime - lastSpawnTime >= kidsSpawnInterval) {
-    // create also the sprite for the kid so true
-    CreateChild(false);
-    lastSpawnTime = currentTime;
+  if (bDisplayIntro) {
+    if(Input::IsKeyPressed(SDL_SCANCODE_SPACE)) {
+      bDisplayIntro = false;
+    }
+  } else {
+    Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastSpawnTime >= kidsSpawnInterval) {
+      // create also the sprite for the kid so true
+      CreateChild(false);
+      lastSpawnTime = currentTime;
+    }
+    for(auto& objectPair : allObjects)
+    {
+      objectPair.second->Update(deltatime);
+    }
+    if(livesText) livesText->setText(std::to_string(lives));
+    if(scoreText) scoreText->setText(std::to_string(score));
   }
-  for(auto& objectPair : allObjects)
-  {
-    objectPair.second->Update(deltatime);
-  }
-  if(livesText) livesText->setText(std::to_string(lives));
-  if(scoreText) scoreText->setText(std::to_string(score));
 }
 
 void State::Update(float deltatime) { GetInstance().UpdateInternal(deltatime); }
