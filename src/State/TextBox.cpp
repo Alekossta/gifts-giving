@@ -4,9 +4,9 @@
 #include "Graphics/Text.h"
 
 TextBox::TextBox(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,
-int zIndexNew, const std::string &text , Object* textBackground, bool bIsVisibleNew, float rotation)
+int zIndexNew, const std::string &text, bool bIsVisibleNew, float rotation)
 : Object(newName, startingPosition, startingSize, "", {}, {}, zIndexNew, 
-false, false, bIsVisibleNew, rotation),text(text), textBackground(textBackground) {
+false, false, bIsVisibleNew, rotation),text(text) {
 
 }
 

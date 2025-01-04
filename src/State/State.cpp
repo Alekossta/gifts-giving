@@ -196,11 +196,11 @@ void State::InitInternal()
 
 
   Vector2 positionLivesText(25, 25);
-  livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3", NULL, Game::GetGameFont());
+  livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3", Game::GetGameFont());
   AddObjectToAll(livesText);
 
   Vector2 positionScoreText(Game::GetWidth() - 25, 25);
-  scoreText = new TextBox("ScoreText", positionScoreText, {}, 2, "1", NULL, Game::GetGameFont());
+  scoreText = new TextBox("ScoreText", positionScoreText, {}, 2, "1", Game::GetGameFont());
   AddObjectToAll(scoreText);
 
   // call begin for all objects
@@ -243,8 +243,8 @@ void State::CreateChild() {
     delete testerObject;
 
     Object* textBackground = new Object(tileName + "textBoxBackground", position + (Vector2){25, -80}, {2*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
-    TextBox* textBox = new TextBox(tileName + "textBox", position + (Vector2){50, -55}, {}, 4, "I want " + gifts[rand() % gifts.size()], textBackground, true);
-    TextBox* timeTextBox = new TextBox(tileName + "timeTextBox", position + (Vector2){8, -35}, {}, 2, "", NULL);
+    TextBox* textBox = new TextBox(tileName + "textBox", position + (Vector2){50, -55}, {}, 4, "I want " + gifts[rand() % gifts.size()], true);
+    TextBox* timeTextBox = new TextBox(tileName + "timeTextBox", position + (Vector2){8, -35}, {}, 2, "");
 
     Child* child = new Child(
         tileName, position, tileSize,
@@ -266,7 +266,7 @@ void State::CreateChild() {
 
 void State::RemoveChild(Child* child) {
     std::string name = child->name;
-    child->textBox->textBackground = NULL;
+    // child->textBox->textBackground = NULL;
     child->textBox = NULL;
     child->timeTextBox = NULL;
     allObjects[name] = NULL;

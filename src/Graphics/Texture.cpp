@@ -2,7 +2,8 @@
 #include "Graphics/Graphics.h"
 #include "SDL2/SDL_image.h"
 
-Texture::Texture(SDL_Texture* newTexture, const std::string& newSrc) : src(newSrc), texture(newTexture)
+Texture::Texture(SDL_Texture* newTexture, const std::string& newSrc) : texture(newTexture),
+src(newSrc) 
 {   
 
 }

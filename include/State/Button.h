@@ -16,7 +16,6 @@ class Button : public Object
         int getOpensDoorCode() const { return opensDoorCode; };
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
-        virtual void OnOverlap(Object* overlappingObject) override {};
 
         void Activate();
         void DeActivate();

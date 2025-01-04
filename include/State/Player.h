@@ -16,5 +16,4 @@ class Player : public Object
         ~Player();
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
-        virtual void OnOverlap(Object* overlappingObject) override {};
 };

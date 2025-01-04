@@ -12,7 +12,7 @@ private:
     
 public:
     TextBox(const std::string& newName, Vector2 startingPosition, Vector2 startingSize,
-         int zIndexNew, const std::string &text , Object* textBackground, bool bIsVisibleNew=true, float rotation = 0.0);
+         int zIndexNew, const std::string &text, bool bIsVisibleNew=true, float rotation = 0.0);
 
     void setText(const std::string& newText);
     std::string getText() const { return text; }

@@ -12,7 +12,6 @@ class Object
         virtual ~Object();
         virtual void Begin();
         virtual void Update(float deltatime);
-        virtual void OnOverlap(Object* overlappingObject);
         virtual void setIsVisible(bool newbIsVisible);
         std::string name;
         Vector2 position;
