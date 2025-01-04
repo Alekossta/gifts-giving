@@ -28,6 +28,9 @@ class State {
         void AddObjectToAll(Object* objectToAdd);
         void CreateChild();
         bool isPositionValid(Object* object);
+        void setupTileCodeToTextureIndex();
+        void setupWallCodes();
+        void setupGifts();
 
         unsigned int score;
         unsigned int lives;

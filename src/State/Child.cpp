@@ -27,15 +27,15 @@ void Child::Update(float deltatime)
 		
 		if (bothPlayersClose) 
 		{
-			textBox->setBIsVisible(true);
+			textBox->setIsVisible(true);
 		} else {
-			textBox->setBIsVisible(false);
+			textBox->setIsVisible(false);
 		}
 		timeTextBox->setText(std::to_string(timeToGiveGift.secondsLeft));
 		if(Input::IsKeyPressed(SDL_SCANCODE_SPACE) && Input::IsKeyPressed(SDL_SCANCODE_RETURN) && bothPlayersClose)
 		{	
 			textBox->setText("Thank you!");
-			textBox->setBIsVisible(true);
+			textBox->setIsVisible(true);
 			timeTextBox->bIsVisible = false;
 			bIsActive = false;
 			timeToDisappear.startTimer(1000);
@@ -44,13 +44,13 @@ void Child::Update(float deltatime)
 				bIsActive = false;
 				timeTextBox->bIsVisible = false;
 				textBox->setText("):");
-				textBox->setBIsVisible(true);
+				textBox->setIsVisible(true);
 				timeToDisappear.startTimer(1000);
 			}
 		}
 	} else {
 		if (timeToDisappear.secondsLeft == 0) {
-			textBox->setBIsVisible(false);
+			textBox->setIsVisible(false);
 			State::GetInstance().RemoveChild(this);
 		}
 	}

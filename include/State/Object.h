@@ -13,6 +13,7 @@ class Object
         virtual void Begin();
         virtual void Update(float deltatime);
         virtual void OnOverlap(Object* overlappingObject);
+        virtual void setIsVisible(bool newbIsVisible);
         std::string name;
         Vector2 position;
         Vector2 size;
@@ -23,7 +24,7 @@ class Object
         bool bCollides;
         std::vector<std::string> Tags;
         std::vector<std::string> CollisionIgnoreTags;
+        std::vector<Object*> children;
         bool bIsVisible;
-        virtual void setBIsVisible(bool bIsVisible) { this->bIsVisible = bIsVisible; };
         float rotation;
 };

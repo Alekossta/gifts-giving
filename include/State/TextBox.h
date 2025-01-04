@@ -16,11 +16,4 @@ public:
 
     void setText(const std::string& newText);
     std::string getText() const { return text; }
-    void setBIsVisible(bool newBIsVisible) override { 
-        bIsVisible = newBIsVisible; 
-        if (textBackground) {
-            textBackground->bIsVisible = newBIsVisible; 
-        }
-    };
-    Object* textBackground;
 };

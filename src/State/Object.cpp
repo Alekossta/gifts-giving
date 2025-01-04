@@ -25,7 +25,11 @@ void Object::Update(float deltatime)
 
 }
 
-void Object::OnOverlap(Object* overlappingObject)
+void Object::setIsVisible(bool newbIsVisible)
 {
-    
+    bIsVisible = newbIsVisible;
+    for(Object* child : children)
+    {
+        child->setIsVisible(newbIsVisible);
+    }
 }

@@ -22,14 +22,8 @@ State State::instance;
 
 State &State::GetInstance() { return instance; }
 
-void State::InitInternal()
+void State::setupTileCodeToTextureIndex()
 {
-
-  const float playersSpeed = 250.f;
-
-  LevelManager::Init();
-
-  currentLevel = LevelManager::GetLevels()["Level0"];
   tileCodeToTextureIndex["MA0"] = 0;
   tileCodeToTextureIndex["FE0"] = 1;
   tileCodeToTextureIndex["TB0"] = 2;
@@ -44,7 +38,10 @@ void State::InitInternal()
   tileCodeToTextureIndex["C20"] = 11;
   tileCodeToTextureIndex["C30"] = 12;
   tileCodeToTextureIndex["C40"] = 13;
+}
 
+void State::setupWallCodes()
+{
   wallCodes.push_back("VB0");
   wallCodes.push_back("VT0");
   wallCodes.push_back("WV0");
@@ -59,7 +56,10 @@ void State::InitInternal()
   wallCodes.push_back("T20");
   wallCodes.push_back("T30");
   wallCodes.push_back("T40");
+}
 
+void State::setupGifts()
+{
   gifts.push_back(" a bike!");
   gifts.push_back(" a dall!");
   gifts.push_back(" a ball!");
@@ -70,10 +70,30 @@ void State::InitInternal()
   gifts.push_back(" a dog!");
   gifts.push_back(" a cat!");
   gifts.push_back(" a fish!");
-  srand(time(NULL));
+}
 
+void State::InitInternal()
+{
+
+  // constants
+  const float playersSpeed = 250.f;
+
+  // initialize variables
   goalNumOfActiveChildren = 3;
-  initSecondsToGiveGift = 3;
+  initSecondsToGiveGift = 25;
+  lives = 3;
+  score = 0;
+
+  // init level manager and open level 0
+  LevelManager::Init();
+  currentLevel = LevelManager::GetLevels()["Level0"];
+
+  // setup for logic
+  setupTileCodeToTextureIndex();
+  setupWallCodes();
+  setupGifts();
+
+  srand(time(NULL));
 
   for (int y = 0; y < NUM_OF_TILES_COL; y++)
   {
@@ -173,8 +193,7 @@ void State::InitInternal()
     }
   }
 
-  lives = 3;
-  score = 0;
+
 
   Vector2 positionLivesText(25, 25);
   livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3", NULL, Game::GetGameFont());
@@ -225,9 +244,7 @@ void State::CreateChild() {
 
     Object* textBackground = new Object(tileName + "textBoxBackground", position + (Vector2){25, -80}, {2*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
     TextBox* textBox = new TextBox(tileName + "textBox", position + (Vector2){50, -55}, {}, 4, "I want " + gifts[rand() % gifts.size()], textBackground, true);
-
     TextBox* timeTextBox = new TextBox(tileName + "timeTextBox", position + (Vector2){8, -35}, {}, 2, "", NULL);
-
 
     Child* child = new Child(
         tileName, position, tileSize,
@@ -236,6 +253,9 @@ void State::CreateChild() {
     AddObjectToAll(textBox);
     AddObjectToAll(textBackground);
     AddObjectToAll(timeTextBox);
+    child->children.push_back(timeTextBox);
+    child->children.push_back(textBackground);
+    textBackground->children.push_back(textBox);
     activeChildren.insert(child);
 
     Graphics::GetInstance().createSprite(tileName, child);
@@ -259,20 +279,9 @@ void State::RemoveChild(Child* child) {
 
 void State::UpdateInternal(float deltatime)
 {
-  while (activeChildren.size() < goalNumOfActiveChildren) {
-    CreateChild();
-  }
-  for (auto it = allObjects.begin(); it != allObjects.end(); ) {
-    if (it->second == NULL) {
-      it = allObjects.erase(it); 
-    } else {
-      it->second->Update(deltatime);
-      if (it->second == NULL) {
-        it = allObjects.erase(it); 
-      } else {
-        ++it;
-      }
-    }
+  for(auto& objectPair : allObjects)
+  {
+    objectPair.second->Update(deltatime);
   }
   if(livesText) livesText->setText(std::to_string(lives));
   if(scoreText) scoreText->setText(std::to_string(score));
