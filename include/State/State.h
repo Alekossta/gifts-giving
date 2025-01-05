@@ -48,7 +48,7 @@ class State {
         int goalNumOfActiveChildren;
         int initSecondsToGiveGift;
 
-        Uint32 kidsSpawnInterval = 3 * 1000; // start at 15 sec
+        Uint32 kidsSpawnInterval = 15 * 1000; // start at 15 sec
         Uint32 lastSpawnTime;
 
         std::vector<Vector2> noWallPositions;
