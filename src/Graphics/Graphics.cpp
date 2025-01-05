@@ -18,8 +18,7 @@ Graphics &Graphics::GetInstance() {
 }
 
 void Graphics::createTextSprite(const std::string& name, TextBox* text) {
-    SDL_Color defaultColor {0,0,0};
-    Sprite* newSprite = new Text(name, text->getText(), defaultColor, 3);
+    Sprite* newSprite = new Text(name, text->getText(), text->color, text->zIndex);
     sprites[name] = newSprite;
 }
 
@@ -68,7 +67,7 @@ void Graphics::InitInternal(const std::string &windowName, unsigned width,unsign
     throw std::runtime_error("Failed to create renderer");
   }
 
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 
   for (const auto &[name, object] : State::GetAllObjects()) 
   {   
@@ -81,6 +80,17 @@ void Graphics::InitInternal(const std::string &windowName, unsigned width,unsign
     {
         createSprite(name, object);
     }
+  }
+}
+
+void Graphics::DestroySpriteInternal(const std::string& name)
+{
+  if (sprites.find(name) == sprites.end()) return;
+  Sprite* spriteToDestroy = sprites[name];
+  if(spriteToDestroy)
+  {
+    sprites.erase(name);
+    //delete spriteToDestroy;
   }
 }
 
@@ -114,11 +124,12 @@ void Graphics::RenderInternal() {
   std::vector<Sprite *> spriteVector;
   for (const auto &pair : sprites) {
 
-    if (State::GetAllObjects()[pair.first]->bIsVisible == false || (State::GetBDisplayIntro() && pair.first != "intro")) {
+    if (State::GetAllObjects()[pair.first]->bIsVisible == false || (State::GetBDisplayIntro() && !startsWith(pair.first, "intro"))) {
       continue;
     }
     spriteVector.push_back(pair.second);
   }
+
   std::sort(spriteVector.begin(), spriteVector.end(), compareByZIndex);
 
   // render all sprites

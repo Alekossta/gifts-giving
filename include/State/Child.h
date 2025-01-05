@@ -11,6 +11,7 @@ class Child : public Object
         TimerHandler timeToGiveGift;
         TimerHandler timeToDisappear;
         bool bAsksGift;
+        bool bDisappearing = false;
 
     public:
 
@@ -20,6 +21,7 @@ class Child : public Object
         ~Child(){};
         virtual void Begin() override;
         virtual void Update(float deltatime) override;
+        void DisappearTimerEnded();
         Object* textHolder;
         TextBox* textBox;
         TextBox* timeTextBox;

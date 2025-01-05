@@ -1,26 +1,14 @@
 #include <iostream>
 #include "SDL2/SDL.h"
+#include <functional>
 
 class TimerHandler {
 public:
     int secondsLeft;
-
+    std::function<void()> function; // Replace void (*)() with std::function<void()>
     TimerHandler(int initialSeconds) : secondsLeft(initialSeconds) {}
+    SDL_TimerID timerID; // Store the timer ID
 
-    static Uint32 TimerCallback(Uint32 interval, void* param) {
-        // Cast param to TimerHandler pointer
-        TimerHandler* handler = static_cast<TimerHandler*>(param);
-
-        if (handler->secondsLeft > 0) {
-            handler->secondsLeft--;
-        } else {
-            return 0; // Stop the timer
-        }
-
-        return interval; // Continue the timer
-    }
-
-    void startTimer(Uint32 interval) {
-        SDL_AddTimer(interval, TimerCallback, this);
-    }
+    static Uint32 TimerCallback(Uint32 interval, void* param);
+    void startTimer();
 };

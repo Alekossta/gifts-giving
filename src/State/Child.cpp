@@ -9,7 +9,17 @@ int zIndexNew, Object* newTextHolder, TextBox* textBox, TextBox* timeTextBox, in
 newSourceRectangleSize, zIndexNew, false, true, true),
  bAsksGift(false), textHolder(newTextHolder), textBox(textBox), timeTextBox(timeTextBox), timeToGiveGift(secondsLeft), timeToDisappear(2)
 {
-	timeToGiveGift.startTimer(1000);
+	std::string actualName = name;
+	timeToGiveGift.function = [actualName]() mutable {
+		State::DecreaseLives();
+		State::DestroyObject(actualName);
+	};
+	timeToGiveGift.startTimer();
+}
+
+void Child::DisappearTimerEnded()
+{
+	State::DestroyObject(name);
 }
 
 void Child::Update(float deltatime)
@@ -30,7 +40,7 @@ void Child::Update(float deltatime)
 	
 	if(textHolder)
 	{
-		if (bothPlayersClose) 
+		if (bothPlayersClose || bDisappearing) 
 		{
 			textHolder->setIsVisible(true);
 		} else {
@@ -42,22 +52,31 @@ void Child::Update(float deltatime)
 	{
 		timeTextBox->setText(std::to_string(timeToGiveGift.secondsLeft));
 	}
-
-	// if(Input::IsKeyPressed(SDL_SCANCODE_SPACE) && Input::IsKeyPressed(SDL_SCANCODE_RETURN) && bothPlayersClose)
-	// {	
-	// 	if(textBox)
-	// 	{
-	// 		textBox->setText("Thank you!");
-	// 	}
-	// 	// textBox->setIsVisible(true);
-	// 	// timeTextBox->bIsVisible = false;
-	// 	// bIsActive = false;
-	// 	timeToDisappear.startTimer(1000);
-	// }
+	if(!bDisappearing)
+	{
+		if(Input::IsKeyPressed(SDL_SCANCODE_SPACE) && Input::IsKeyPressed(SDL_SCANCODE_RETURN) && bothPlayersClose)
+		{	
+			if(textBox)
+			{
+				textBox->setText("Thank you!");
+				State::IncreaseScore(timeToGiveGift.secondsLeft);
+			}
+			if(timeTextBox)
+			{
+				timeTextBox->setIsVisible(false);
+			}
+			
+			std::string actualName = name;
+			timeToDisappear.function = [actualName]() mutable {
+				State::DestroyObject(actualName);
+			};
+			timeToDisappear.startTimer();
+			bDisappearing = true; 
+		}
+	}
 }
 
 void Child::Begin() 
 {
 	
 }
-

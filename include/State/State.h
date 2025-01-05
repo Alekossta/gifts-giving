@@ -27,12 +27,14 @@ class State {
         void MoveObjectInternal(Object* object, Vector2 newPosition);
         void AddObjectToAll(Object* objectToAdd);
         void CreateChild(bool bStateOnly);
+        void DestroyObjectInternal(const std::string& objectName);
         bool isPositionValid(Object* object);
         void setupTileCodeToTextureIndex();
         void setupWallCodes();
         void setupGifts();
 
         bool bDisplayIntro;
+        bool bGameOver;
 
         unsigned int score;
         unsigned int lives;
@@ -46,7 +48,7 @@ class State {
         int goalNumOfActiveChildren;
         int initSecondsToGiveGift;
 
-        Uint32 kidsSpawnInterval = 15 * 1000; // start at 15 sec
+        Uint32 kidsSpawnInterval = 3 * 1000; // start at 15 sec
         Uint32 lastSpawnTime;
 
         std::vector<Vector2> noWallPositions;
@@ -60,6 +62,8 @@ class State {
         static bool AreObjectsClose(Object* object1, Object* object2);
         std::map<std::string, int> tileCodeToTextureIndex;
         std::vector<std::string> wallCodes;
-        void RemoveChild(Child* child);
         static bool GetBDisplayIntro() { return GetInstance().bDisplayIntro; };
+        static void DestroyObject(const std::string& objectToDestroy) {GetInstance().DestroyObjectInternal(objectToDestroy);};
+        static void IncreaseScore(int points) { GetInstance().score += points; };
+        static void DecreaseLives() { GetInstance().lives--; };
 };

@@ -25,6 +25,7 @@ class Graphics {
         void InitInternal(const std::string& windowName, unsigned width, unsigned height);
 
         void InitSpritesInternal();
+        void DestroySpriteInternal(const std::string& name);
 
         // Delete copy constructor and assignment operator to prevent duplicates
         Graphics(const Graphics&) = delete;
@@ -39,5 +40,5 @@ class Graphics {
         static void Init(const std::string& windowName, unsigned width, unsigned height);
         void createTextSprite(const std::string& name, TextBox* text);
         void createSprite(const std::string& name, Object* object);
-        void removeSprite(const std::string& name) { sprites.erase(sprites.find(name)); };
+        static void DestroySprite(const std::string& name) {GetInstance().DestroySpriteInternal(name);};
 };

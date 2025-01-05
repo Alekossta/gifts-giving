@@ -7,6 +7,7 @@
 #include "State/Button.h"
 #include "State/Door.h"
 #include "State/Child.h"
+#include "General.h"
 #include "Graphics/Graphics.h"
 #include <algorithm>
 
@@ -21,6 +22,29 @@ bool elementOf(std::vector<std::string> &vec, std::string element) {
 State State::instance;
 
 State &State::GetInstance() { return instance; }
+
+std::vector<std::string> introText = {"Gifts-Giving",
+"Spread joy, one gift at a time! It's Christmas Eve!",
+" Santa Claus and Mrs. Claus need your help to deliver gifts to all the children before time runs out.",
+"Instructions:",
+"1. Move Around:",
+"- Player 1 (Mrs. Claus): Use the arrow keys.",
+"- Player 2 (Santa): Use WASD.",
+"2. Deliver Gifts:",
+"- Approach a child together.",
+" - Player 1 presses Enter, and Player 2 presses Space at the same time to deliver a gift.",
+"3. Don't Delay!:",
+"- Each child has a limited time to wait before receiving their gift.",
+"- If a child waits too long, you lose 1 life.",
+"4. Win the Game:",
+"- Deliver as many gifts as you can before you run out of lives!",
+"Press Space to Start!"
+};
+
+std::vector<std::string> gameOverText = {
+  "Game Over!",
+  "Press Space to Play Again!"
+};
 
 void State::setupTileCodeToTextureIndex()
 {
@@ -80,10 +104,10 @@ void State::InitInternal()
 
   // initialize variables
   goalNumOfActiveChildren = 3;
-  initSecondsToGiveGift = 25;
+  initSecondsToGiveGift = 2;
   lives = 3;
   score = 0;
-  lastSpawnTime = SDL_GetTicks();
+  lastSpawnTime = -1000000;
 
   // init level manager and open level 0
   LevelManager::Init();
@@ -197,11 +221,11 @@ void State::InitInternal()
 
 
   Vector2 positionLivesText(25, 25);
-  livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3", Game::GetGameFont());
+  livesText = new TextBox("LivesText", positionLivesText, {}, 2, "3");
   AddObjectToAll(livesText);
 
   Vector2 positionScoreText(Game::GetWidth() - 25, 25);
-  scoreText = new TextBox("ScoreText", positionScoreText, {}, 2, "1", Game::GetGameFont());
+  scoreText = new TextBox("ScoreText", positionScoreText, {}, 2, "1");
   AddObjectToAll(scoreText);
 
   // create a child for the start
@@ -211,13 +235,22 @@ void State::InitInternal()
   {
     pair.second->Begin();
   }
-
-  // create only on  state because graphics has not been initalized yet
-  CreateChild(true);
-
-  TextBox* intro = new TextBox("intro", {60, 80}, {}, 2, "Welcome!", Game::GetGameFont());
-  AddObjectToAll(intro);
+  int yOffset = 0;
+  int index = 0;
+  for (auto intro : introText) {
+     TextBox* introTextBox = new TextBox("intro" + std::to_string(index++), {60, 80 + yOffset}, {}, 2, intro, true,{255, 255, 255});
+     AddObjectToAll(introTextBox);
+     yOffset += 40;
+  }
+  yOffset = Game::GetHeight() * 0.5 - 20;
+  index = 0;
+  for (auto gameOver : gameOverText) {
+     TextBox* gameOverTextBox = new TextBox("gameOver" + std::to_string(index++), {60, yOffset}, {}, 2, gameOver, true,{255, 255, 255});
+     AddObjectToAll(gameOverTextBox);
+     yOffset += 40;
+  }
   bDisplayIntro = true;
+  bGameOver = false;
 }
 
 void State::Init() { GetInstance().InitInternal(); }
@@ -232,11 +265,37 @@ bool State::isPositionValid(Object* object) {
     if (AreObjectsOverlapping(object, child)) return false;
   }
 
+  if (object->position.x + 50 + 2.5*TILE_SIZE > Game::GetWidth() || object->position.y - 55 - TILE_SIZE < 0) return false;
   return true;
 }
 
+void State::DestroyObjectInternal(const std::string& objectName)
+{
+  if (allObjects.find(objectName) == allObjects.end()) return;
+  Object* objectToDestroy = allObjects[objectName];
+  if(objectToDestroy)
+  {
+    for(Object* child : objectToDestroy->children)
+    {
+      if (!child) continue;
+      DestroyObjectInternal(child->name);
+    }
+    Graphics::DestroySprite(objectName);
+    allObjects[objectName] = NULL;
+    allObjects.erase(objectName);
+  }
+}
+
 void State::CreateChild(bool bStateOnly) {
+    if(kidsSpawnInterval > 7 * 1000 )
+    {
+      kidsSpawnInterval -= 250;
+    }
+
     std::string tileName = "Child" + std::to_string(rand() % (10000000));
+    while (State::GetAllObjects().find(tileName) != State::GetAllObjects().end()) {
+      tileName = "Child" + std::to_string(rand() % (10000000));
+    } 
     Vector2 position;
     Vector2 tileSize = Vector2(40, 48);
     bool bCollides = true;
@@ -252,9 +311,11 @@ void State::CreateChild(bool bStateOnly) {
     } while (!isPositionValid(testerObject));
     delete testerObject;
 
-    Object* textBackground = new Object(tileName + "textBoxBackground", position + (Vector2){25, -80}, {2*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
-    TextBox* textBox = new TextBox(tileName + "textBox", position + (Vector2){50, -55}, {}, 4, "I want " + gifts[rand() % gifts.size()], true);
-    TextBox* timeTextBox = new TextBox(tileName + "timeTextBox", position + (Vector2){8, -35}, {}, 2, "");
+    Object* textBackground = new Object(tileName + "textBoxBackground", position + (Vector2){30, -80},
+     {2.5*TILE_SIZE, TILE_SIZE}, src, {19*32, 0}, {64, 32}, 3, false);
+    TextBox* textBox = new TextBox(tileName + "textBox", position + (Vector2){50, -55}, {}, 4,
+     "I want " + gifts[rand() % gifts.size()], true);
+    TextBox* timeTextBox = new TextBox(tileName + "timeTextBox", position + (Vector2){8, -35}, {}, 4, "");
 
     Child* child = new Child(
         tileName, position, tileSize,
@@ -277,29 +338,39 @@ void State::CreateChild(bool bStateOnly) {
     }
 }
 
-void State::RemoveChild(Child* child) {
-    std::string name = child->name;
-    // child->textBox->textBackground = NULL;
-    child->textBox = NULL;
-    child->timeTextBox = NULL;
-    allObjects[name] = NULL;
-    activeChildren.erase(child);
-    Graphics::GetInstance().removeSprite(name);
-    Graphics::GetInstance().removeSprite(name + "timeTextBox");
-    Graphics::GetInstance().removeSprite(name + "textBoxBackground");
-    Graphics::GetInstance().removeSprite(name + "textBox");
-}
-
 void State::UpdateInternal(float deltatime)
 {
   if (bDisplayIntro) {
     if(Input::IsKeyPressed(SDL_SCANCODE_SPACE)) {
       bDisplayIntro = false;
     }
+  } else if (bGameOver) {
+    for (auto& [name, object] : allObjects) {
+      if (!startsWith(name, "gameOver")) object->setIsVisible(false);
+      else object->setIsVisible(true);
+    }
+    if(Input::IsKeyPressed(SDL_SCANCODE_SPACE)) {
+        State::Init();
+        for (auto &[name, object] : State::GetAllObjects()) 
+        {   
+          TextBox* text = dynamic_cast<TextBox*>(object);    
+          if (text) 
+          {
+              Graphics::GetInstance().createTextSprite(name, text);
+          } 
+          else // is normal object
+          {
+              Graphics::GetInstance().createSprite(name, object);
+          }
+        }
+    }
   } else {
+    for (auto& [name, object] : allObjects) {
+      if (startsWith(name, "intro") || startsWith(name, "gameOver")) object->setIsVisible(false);
+    }
     Uint32 currentTime = SDL_GetTicks();
     if (currentTime - lastSpawnTime >= kidsSpawnInterval) {
-      // create also the sprite for the kid so true
+      // create also the sprite for the kid so false
       CreateChild(false);
       lastSpawnTime = currentTime;
     }
@@ -309,6 +380,10 @@ void State::UpdateInternal(float deltatime)
     }
     if(livesText) livesText->setText(std::to_string(lives));
     if(scoreText) scoreText->setText(std::to_string(score));
+
+    if (lives == 0) {
+      bGameOver = true;
+    }
   }
 }
 
@@ -428,4 +503,6 @@ void State::MoveObject(Object *object, Vector2 newPosition)
 {
   State::GetInstance().MoveObjectInternal(object, newPosition);
 }
-State::~State() {}
+State::~State() {
+  
+}
