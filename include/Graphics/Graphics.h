@@ -41,4 +41,5 @@ class Graphics {
         void createTextSprite(const std::string& name, TextBox* text);
         void createSprite(const std::string& name, Object* object);
         static void DestroySprite(const std::string& name) {GetInstance().DestroySpriteInternal(name);};
+        static void Reset();
 };

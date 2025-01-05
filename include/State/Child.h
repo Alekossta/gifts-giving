@@ -8,13 +8,13 @@
 class Child : public Object
 {  
     private:
-        TimerHandler timeToGiveGift;
-        TimerHandler timeToDisappear;
+        
         bool bAsksGift;
         bool bDisappearing = false;
 
     public:
-
+        TimerHandler timeToGiveGift;
+        TimerHandler timeToDisappear;
         Child(const std::string& childName, Vector2 position, Vector2 startingSize, 
             const std::string& newSrcName, Vector2 newSourceRectanglePosition, Vector2 newSourceRectangleSize,
             int zIndexNew, Object* newTextHolder, TextBox* textBox, TextBox* timeTexBox, int secondsLeft);

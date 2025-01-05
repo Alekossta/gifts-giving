@@ -66,4 +66,5 @@ class State {
         static void DestroyObject(const std::string& objectToDestroy) {GetInstance().DestroyObjectInternal(objectToDestroy);};
         static void IncreaseScore(int points) { GetInstance().score += points; };
         static void DecreaseLives() { GetInstance().lives--; };
+        static void Reset();
 };

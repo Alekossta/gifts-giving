@@ -170,3 +170,8 @@ void Graphics::RenderInternal() {
 }
 
 void Graphics::Render() { GetInstance().RenderInternal(); }
+
+void Graphics::Reset() {
+  Graphics::GetInstance().sprites.clear();
+  Graphics::GetInstance().textures.clear();
+}

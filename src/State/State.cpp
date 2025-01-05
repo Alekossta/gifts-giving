@@ -350,6 +350,9 @@ void State::UpdateInternal(float deltatime)
       else object->setIsVisible(true);
     }
     if(Input::IsKeyPressed(SDL_SCANCODE_SPACE)) {
+      Graphics::Reset();
+      State::Reset();
+      
         State::Init();
         for (auto &[name, object] : State::GetAllObjects()) 
         {   
@@ -505,4 +508,17 @@ void State::MoveObject(Object *object, Vector2 newPosition)
 }
 State::~State() {
   
+}
+
+void State::Reset() {
+  for (auto &[name, object] : State::GetInstance().allObjects) {
+    Child* child = dynamic_cast<Child*>(object);
+    if (!child) continue;
+    SDL_RemoveTimer(child->timeToGiveGift.timerID);
+    SDL_RemoveTimer(child->timeToDisappear.timerID);
+  }
+  State::GetInstance().allObjects.clear();
+  State::GetInstance().activeChildren.clear();
+  State::GetInstance().noWallPositions.clear();
+  State::GetInstance().gifts.clear();
 }
