@@ -42,8 +42,7 @@ std::vector<std::string> introText = {"Gifts-Giving",
 };
 
 std::vector<std::string> gameOverText = {
-  "Game Over!",
-  "Press Space to Play Again!"
+  "Game Over!"
 };
 
 void State::setupTileCodeToTextureIndex()
@@ -104,7 +103,7 @@ void State::InitInternal()
 
   // initialize variables
   goalNumOfActiveChildren = 3;
-  initSecondsToGiveGift = 2;
+  initSecondsToGiveGift = 25;
   lives = 3;
   score = 0;
   lastSpawnTime = -1000000;
@@ -349,24 +348,11 @@ void State::UpdateInternal(float deltatime)
       if (!startsWith(name, "gameOver")) object->setIsVisible(false);
       else object->setIsVisible(true);
     }
-    if(Input::IsKeyPressed(SDL_SCANCODE_SPACE)) {
-      Graphics::Reset();
-      State::Reset();
-      
-        State::Init();
-        for (auto &[name, object] : State::GetAllObjects()) 
-        {   
-          TextBox* text = dynamic_cast<TextBox*>(object);    
-          if (text) 
-          {
-              Graphics::GetInstance().createTextSprite(name, text);
-          } 
-          else // is normal object
-          {
-              Graphics::GetInstance().createSprite(name, object);
-          }
-        }
-    }
+    timeToClose.secondsLeft = 5;
+    timeToClose.function = []() mutable {
+		Game::SetIsRunning(false);
+	};
+  timeToClose.startTimer();
   } else {
     for (auto& [name, object] : allObjects) {
       if (startsWith(name, "intro") || startsWith(name, "gameOver")) object->setIsVisible(false);
@@ -517,6 +503,8 @@ void State::Reset() {
     SDL_RemoveTimer(child->timeToGiveGift.timerID);
     SDL_RemoveTimer(child->timeToDisappear.timerID);
   }
+  State::GetInstance().wallCodes.clear();
+  State::GetInstance().tileCodeToTextureIndex.clear();
   State::GetInstance().allObjects.clear();
   State::GetInstance().activeChildren.clear();
   State::GetInstance().noWallPositions.clear();

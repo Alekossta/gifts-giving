@@ -52,6 +52,7 @@ class State {
         Uint32 lastSpawnTime;
 
         std::vector<Vector2> noWallPositions;
+        TimerHandler timeToClose;
     public:
         static State& GetInstance();
         static void Update(float deltatime);
